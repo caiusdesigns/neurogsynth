@@ -1,1 +1,2079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NeuroG-Synth ∞ V4.0 – by caiusdesigns</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    }
+    :root {
+      color-scheme: dark;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #191426 0, #07050c 40%, #000 100%);
+      color: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+    .app {
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px 14px 40px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffedba 0, #ffb867 30%, #ff6f65 55%, #0a0718 90%);
+      box-shadow:
+        0 0 22px rgba(255, 183, 101, 0.9),
+        0 0 40px rgba(255, 110, 130, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    .logo-mark::before,
+    .logo-mark::after {
+      content: "";
+      position: absolute;
+      inset: 14%;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 240, 215, 0.4);
+    }
+    .logo-mark::after {
+      inset: 27%;
+      border-color: rgba(255, 200, 170, 0.7);
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.45rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .tagline {
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
 
+    .top-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.85;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      border-radius: 999px;
+      border: 1px solid rgba(210, 160, 120, 0.8);
+      padding: 2px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: radial-gradient(circle at 0% 0%, rgba(255, 200, 150, 0.16) 0, rgba(10, 6, 18, 0.96) 50%);
+    }
+    .dot-live {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #ffdd9e;
+      box-shadow: 0 0 10px rgba(255, 210, 130, 1);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.6fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      background: rgba(10, 8, 20, 0.98);
+      border-radius: 14px;
+      border: 1px solid rgba(215, 145, 110, 0.9);
+      padding: 12px 12px 10px;
+      backdrop-filter: blur(18px);
+      position: relative;
+      overflow: hidden;
+    }
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255, 190, 130, 0.22) 0, transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(255, 120, 160, 0.2) 0, transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+    .panel-inner {
+      position: relative;
+      z-index: 1;
+    }
+    .panel-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+    }
+    .card {
+      background: radial-gradient(circle at top, rgba(33, 20, 40, 0.9), rgba(8, 6, 18, 0.98));
+      border-radius: 10px;
+      border: 1px solid rgba(210, 150, 120, 0.9);
+      padding: 8px 8px 6px;
+    }
+    .card h2 {
+      margin: 0 0 4px;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 2px 0;
+      font-size: 0.84rem;
+    }
+    .row-label {
+      opacity: 0.95;
+    }
+
+    .level-group {
+      display: flex;
+      gap: 4px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+    .level-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 1px 5px;
+      cursor: pointer;
+    }
+    .level-pill input {
+      appearance: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 215, 190, 0.8);
+      position: relative;
+    }
+    .level-pill input:checked::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: 999px;
+      background: #ffd28e;
+      box-shadow: 0 0 6px rgba(255, 214, 140, 1);
+    }
+    .level-pill span {
+      margin-top: 1px;
+    }
+    .level-pill:hover {
+      border-color: rgba(255, 235, 210, 0.3);
+    }
+
+    .toggle-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(215, 160, 120, 0.9);
+      padding: 1px 8px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: rgba(16, 12, 28, 0.98);
+    }
+    .toggle-pill input {
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 225, 200, 0.9);
+      position: relative;
+    }
+    .toggle-pill input:checked::before {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      border-radius: 999px;
+      background: #ffcf8a;
+      box-shadow: 0 0 8px rgba(255, 210, 140, 1);
+    }
+
+    .mode-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      font-size: 0.8rem;
+    }
+    select {
+      background: rgba(18, 12, 28, 0.98);
+      color: #ffeede;
+      border-radius: 999px;
+      border: 1px solid rgba(215, 160, 120, 0.95);
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 0.8rem;
+    }
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.18s ease;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #ffcf8a, #ff8f7d);
+      color: #150a05;
+      box-shadow:
+        0 0 20px rgba(255, 175, 120, 0.9),
+        0 0 32px rgba(255, 120, 120, 0.6);
+    }
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 0 12px rgba(255, 175, 120, 0.7);
+    }
+    .btn-ghost {
+      background: rgba(18, 12, 30, 0.96);
+      color: #ffeede;
+      border-radius: 999px;
+      border: 1px solid rgba(220, 160, 125, 0.95);
+      padding-inline: 10px;
+    }
+    .btn-ghost:active {
+      transform: translateY(1px) scale(0.99);
+    }
+
+    .rating-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      flex-wrap: wrap;
+    }
+    .rating-group input {
+      width: 48px;
+      background: rgba(12, 8, 22, 0.98);
+      border-radius: 999px;
+      border: 1px solid rgba(225, 175, 140, 0.95);
+      padding: 3px 7px;
+      color: #ffeede;
+      outline: none;
+      font-size: 0.78rem;
+      text-align: center;
+    }
+
+    .freq-tune {
+      margin-top: 10px;
+      padding: 7px 8px 5px;
+      border-radius: 10px;
+      border: 1px solid rgba(215, 155, 120, 0.95);
+      background: radial-gradient(circle at top, rgba(40, 26, 40, 0.98), rgba(10, 8, 22, 0.98));
+      font-size: 0.78rem;
+    }
+    .freq-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 4px;
+    }
+    .freq-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 3px 0;
+      flex-wrap: wrap;
+    }
+    .freq-row-label {
+      min-width: 120px;
+      opacity: 0.95;
+    }
+    .freq-row input[type="range"] {
+      flex: 1;
+    }
+    .freq-value {
+      width: 90px;
+      text-align: right;
+      opacity: 0.9;
+    }
+    .band-label {
+      margin-top: 4px;
+      font-size: 0.74rem;
+      opacity: 0.9;
+    }
+
+    .output-wrap {
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 8px;
+      height: 100%;
+      min-height: 320px;
+    }
+    .state-strip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      opacity: 0.9;
+    }
+    .state-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .state-tag {
+      border-radius: 999px;
+      border: 1px solid rgba(220, 170, 130, 0.95);
+      padding: 1px 8px;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: radial-gradient(circle at top, rgba(60, 30, 40, 0.96), rgba(14, 8, 20, 0.98));
+    }
+
+    .viz-nis {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 900px) {
+      .viz-nis {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .nis-box {
+      background: radial-gradient(circle at top left, rgba(55, 28, 40, 0.9), rgba(8, 6, 16, 0.98));
+      border-radius: 10px;
+      border: 1px solid rgba(215, 155, 120, 0.9);
+      padding: 8px 9px 6px;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      max-height: 260px;
+      overflow: auto;
+    }
+    .nis-placeholder {
+      opacity: 0.7;
+    }
+
+    .viz-box {
+      position: relative;
+      background: radial-gradient(circle at center, rgba(255, 193, 135, 0.6), rgba(10, 4, 16, 0.98));
+      border-radius: 10px;
+      border: 1px solid rgba(215, 150, 120, 0.95);
+      overflow: hidden;
+      min-height: 160px;
+    }
+    .viz-label {
+      position: absolute;
+      z-index: 2;
+      top: 6px;
+      left: 8px;
+      font-size: 0.74rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+    canvas#vizCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .history-box {
+      background: radial-gradient(circle at bottom, rgba(32, 18, 40, 0.97), rgba(6, 4, 12, 0.99));
+      border-radius: 10px;
+      border: 1px solid rgba(210, 155, 120, 0.9);
+      padding: 7px 8px 6px;
+      font-size: 0.8rem;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.9;
+      margin-bottom: 4px;
+    }
+    .history-item {
+      padding: 4px 0;
+      border-top: 1px solid rgba(150, 100, 75, 0.7);
+    }
+    .history-item:first-of-type {
+      border-top: none;
+    }
+    .history-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      opacity: 0.9;
+    }
+    .history-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      margin-top: 2px;
+    }
+    .history-tag {
+      border-radius: 999px;
+      border: 1px solid rgba(205, 150, 120, 0.9);
+      padding: 0 6px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+
+    .neurograph-viz {
+      position: absolute;
+      inset: -10px;
+      pointer-events: none;
+      opacity: 0.5;
+      mix-blend-mode: screen;
+    }
+    .neurograph-viz svg {
+      width: 100%;
+      height: 100%;
+    }
+    .neurograph-viz circle {
+      fill: none;
+      stroke: rgba(255, 205, 150, 0.12);
+    }
+    .neurograph-viz line {
+      stroke: rgba(255, 180, 150, 0.18);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="logo-mark"></div>
+      <div>
+        <h1>NeuroG-Synth ∞ V4.0 – by caiusdesigns</h1>
+        <div class="tagline">
+          Warm NeuroPsychoacoustic Engine: carrier + harmonic + isochronic + optional binaural,<br/>
+          driven by a 4D state vector (harmonicity, modulation stability, spectral warmth, entrainment depth).
+          EEG-inspired, non-medical, experimental neuro-audiovisual environment.
+        </div>
+      </div>
+    </header>
+
+    <div class="top-meta">
+      <div class="pill"><span class="dot-live"></span><span>local warm neurograph engine</span></div>
+      <div class="pill">runs in-browser • headphones recommended</div>
+      <div class="pill" id="recommendation-pill">recommended program: <span id="recommendation-label">none yet</span></div>
+    </div>
+
+    <div class="layout">
+      <!-- LEFT SIDE: CONTROLS -->
+      <div class="panel">
+        <div class="neurograph-viz">
+          <svg preserveAspectRatio="xMidYMid slice">
+            <circle cx="18%" cy="25%" r="16%"></circle>
+            <circle cx="55%" cy="12%" r="18%"></circle>
+            <circle cx="82%" cy="40%" r="14%"></circle>
+            <circle cx="40%" cy="72%" r="22%"></circle>
+            <circle cx="12%" cy="70%" r="10%"></circle>
+            <line x1="18%" y1="25%" x2="55%" y2="12%"></line>
+            <line x1="55%" y1="12%" x2="82%" y2="40%"></line>
+            <line x1="18%" y1="25%" x2="12%" y2="70%"></line>
+            <line x1="12%" y1="70%" x2="40%" y2="72%"></line>
+            <line x1="40%" y1="72%" x2="82%" y2="40%"></line>
+          </svg>
+        </div>
+        <div class="panel-inner">
+          <div class="panel-title">State Vector Input</div>
+          <div class="grid-3">
+            <div class="card">
+              <h2>Neurotransmitters</h2>
+              <div class="row">
+                <span class="row-label">Dopamine</span>
+                <div class="level-group">
+                  <label class="level-pill">
+                    <input type="radio" name="dopamine" value="down" />
+                    <span>↓</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="dopamine" value="neutral" checked />
+                    <span>•</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="dopamine" value="up" />
+                    <span>↑</span>
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <span class="row-label">Serotonin</span>
+                <div class="level-group">
+                  <label class="level-pill">
+                    <input type="radio" name="serotonin" value="down" />
+                    <span>↓</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="serotonin" value="neutral" checked />
+                    <span>•</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="serotonin" value="up" />
+                    <span>↑</span>
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <span class="row-label">Acetylcholine</span>
+                <div class="level-group">
+                  <label class="level-pill">
+                    <input type="radio" name="acetylcholine" value="down" />
+                    <span>↓</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="acetylcholine" value="neutral" checked />
+                    <span>•</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="acetylcholine" value="up" />
+                    <span>↑</span>
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <span class="row-label">GABA</span>
+                <div class="level-group">
+                  <label class="level-pill">
+                    <input type="radio" name="gaba" value="down" />
+                    <span>↓</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="gaba" value="neutral" checked />
+                    <span>•</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="gaba" value="up" />
+                    <span>↑</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2>Hormones</h2>
+              <div class="row">
+                <span class="row-label">Testosterone</span>
+                <div class="level-group">
+                  <label class="level-pill">
+                    <input type="radio" name="testosterone" value="down" />
+                    <span>↓</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="testosterone" value="neutral" checked />
+                    <span>•</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="testosterone" value="up" />
+                    <span>↑</span>
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <span class="row-label">Estrogen</span>
+                <div class="level-group">
+                  <label class="level-pill">
+                    <input type="radio" name="estrogen" value="down" />
+                    <span>↓</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="estrogen" value="neutral" checked />
+                    <span>•</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="estrogen" value="up" />
+                    <span>↑</span>
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <span class="row-label">Oxytocin</span>
+                <div class="level-group">
+                  <label class="level-pill">
+                    <input type="radio" name="oxytocin" value="down" />
+                    <span>↓</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="oxytocin" value="neutral" checked />
+                    <span>•</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="oxytocin" value="up" />
+                    <span>↑</span>
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <span class="row-label">Cortisol</span>
+                <div class="level-group">
+                  <label class="level-pill">
+                    <input type="radio" name="cortisol" value="down" />
+                    <span>↓</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="cortisol" value="neutral" checked />
+                    <span>•</span>
+                  </label>
+                  <label class="level-pill">
+                    <input type="radio" name="cortisol" value="up" />
+                    <span>↑</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2>Target Emotions & Mode</h2>
+              <div class="row">
+                <span class="row-label">Focus</span>
+                <label class="toggle-pill">
+                  <input type="checkbox" name="focus" />
+                  <span>on</span>
+                </label>
+              </div>
+              <div class="row">
+                <span class="row-label">Calm</span>
+                <label class="toggle-pill">
+                  <input type="checkbox" name="calm" />
+                  <span>on</span>
+                </label>
+              </div>
+              <div class="row">
+                <span class="row-label">Drive</span>
+                <label class="toggle-pill">
+                  <input type="checkbox" name="drive" />
+                  <span>on</span>
+                </label>
+              </div>
+              <div class="row">
+                <span class="row-label">Euphoria</span>
+                <label class="toggle-pill">
+                  <input type="checkbox" name="euphoria" />
+                  <span>on</span>
+                </label>
+              </div>
+              <div class="row">
+                <span class="row-label">Grounded</span>
+                <label class="toggle-pill">
+                  <input type="checkbox" name="grounded" />
+                  <span>on</span>
+                </label>
+              </div>
+              <div class="row">
+                <span class="row-label">Social warmth</span>
+                <label class="toggle-pill">
+                  <input type="checkbox" name="social" />
+                  <span>on</span>
+                </label>
+              </div>
+
+              <div class="mode-row">
+                <span>Program:</span>
+                <select id="modeSelect">
+                  <option value="reset">Reset & Stabilize (mid-warm alpha)</option>
+                  <option value="focus">Deep Focus (warm beta)</option>
+                  <option value="calm">Sedate & Calm (warm alpha-theta)</option>
+                  <option value="drive">Drive & Momentum (warm high-beta)</option>
+                  <option value="euphoria">Euphoric Uplift (alpha/gamma warm blend)</option>
+                  <option value="social">Social & Bonding (soft warm alpha)</option>
+                  <option value="sleep">Pre-Sleep Descent (warm theta)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="controls-row">
+            <button class="btn btn-primary" id="playBtn">▶ Compile NIS + Hybrid Sound</button>
+            <button class="btn btn-ghost" id="stopBtn">⏹ Clear</button>
+
+            <label class="toggle-pill">
+              <input type="checkbox" id="audioEnable" checked />
+              <span>sound on</span>
+            </label>
+
+            <label class="toggle-pill">
+              <input type="checkbox" id="isochronicToggle" checked />
+              <span>isochronic</span>
+            </label>
+
+            <label class="toggle-pill">
+              <input type="checkbox" id="binauralToggle" />
+              <span>binaural</span>
+            </label>
+
+            <div class="rating-group">
+              <span>Post-run rating (0–10):</span>
+              <input id="ratingInput" type="number" min="0" max="10" step="1" placeholder="—" />
+              <button class="btn btn-ghost" id="saveRunBtn">Save</button>
+            </div>
+          </div>
+
+          <div class="freq-tune">
+            <div class="freq-title">Frequency Tuning (live – EEG-inspired, warm voiced)</div>
+            <div class="freq-row">
+              <span class="freq-row-label">Base tone (Hz)</span>
+              <input type="range" id="baseFreqSlider" min="180" max="540" step="1" />
+              <span class="freq-value"><span id="baseFreqValue">300</span> Hz</span>
+            </div>
+            <div class="freq-row">
+              <span class="freq-row-label">Harmonic tone (Hz)</span>
+              <input type="range" id="harmFreqSlider" min="220" max="2000" step="1" />
+              <span class="freq-value"><span id="harmFreqValue">375</span> Hz</span>
+            </div>
+            <div class="freq-row">
+              <span class="freq-row-label">Modulation rate (Hz)</span>
+              <input type="range" id="modRateSlider" min="1" max="40" step="0.5" />
+              <span class="freq-value"><span id="modRateValue">10</span> Hz</span>
+            </div>
+            <div class="band-label">
+              EEG band: <span id="bandLabel">alpha (~8–12 Hz)</span>
+            </div>
+            <div class="freq-row">
+              <span class="freq-row-label">Isochronic depth</span>
+              <input type="range" id="isoDepthSlider" min="0" max="1" step="0.05" />
+              <span class="freq-value"><span id="isoDepthValue">0.60</span></span>
+            </div>
+            <div class="freq-row">
+              <span class="freq-row-label">Binaural offset (Hz)</span>
+              <input type="range" id="binOffsetSlider" min="0" max="40" step="0.5" />
+              <span class="freq-value"><span id="binOffsetValue">10</span> Hz</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE: OUTPUT + VISUAL + HISTORY -->
+      <div class="panel">
+        <div class="panel-inner output-wrap">
+          <div class="state-strip">
+            <div>Compiled Neural State:</div>
+            <div class="state-tags" id="stateTags"></div>
+          </div>
+
+          <div class="viz-nis">
+            <div class="nis-box" id="nisOutput">
+              <div class="nis-placeholder">
+                Set your neurotransmitter / hormone / emotion vector on the left, choose a program, then press
+                <strong>Compile NIS + Hybrid Sound</strong>.<br><br>
+                NeuroG-Synth ∞ V4.0 will:
+                <ul>
+                  <li>Generate a Neural Instruction Sequence (NIS) – a “CNC file” for behavior</li>
+                  <li>Compute a warm hybrid audio patch (carrier + harmonic + isochronic + optional binaural)</li>
+                  <li>Map your vector into a 4D psychoacoustic profile: harmonicity, modulation stability, spectral warmth, entrainment depth</li>
+                  <li>Drive the pixelated top-front brain map in real time, glowing per region as you up/down-regulate</li>
+                </ul>
+                EEG-inspired, neuroaesthetically tuned. Non-medical, no clinical claims.
+              </div>
+            </div>
+
+            <div class="viz-box">
+              <div class="viz-label">retro pixel brain • top/front view • cnc array</div>
+              <canvas id="vizCanvas"></canvas>
+            </div>
+          </div>
+
+          <div class="history-box">
+            <div class="history-header">
+              <span>Session History (local)</span>
+              <button id="clearHistoryBtn" class="btn-ghost" style="font-size:0.68rem;padding:2px 8px;">Clear</button>
+            </div>
+            <div id="historyList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- Utility readers ----------
+    function readRadio(name) {
+      const sel = document.querySelector('input[name="' + name + '"]:checked');
+      return sel ? sel.value : "neutral";
+    }
+    function readCheckbox(name) {
+      const el = document.querySelector('input[name="' + name + '"]');
+      return !!(el && el.checked);
+    }
+
+    function snapshotState() {
+      return {
+        neurotransmitters: {
+          dopamine: readRadio("dopamine"),
+          serotonin: readRadio("serotonin"),
+          acetylcholine: readRadio("acetylcholine"),
+          gaba: readRadio("gaba"),
+        },
+        hormones: {
+          testosterone: readRadio("testosterone"),
+          estrogen: readRadio("estrogen"),
+          oxytocin: readRadio("oxytocin"),
+          cortisol: readRadio("cortisol"),
+        },
+        emotions: {
+          focus: readCheckbox("focus"),
+          calm: readCheckbox("calm"),
+          drive: readCheckbox("drive"),
+          euphoria: readCheckbox("euphoria"),
+          grounded: readCheckbox("grounded"),
+          social: readCheckbox("social"),
+        },
+        mode: document.getElementById("modeSelect").value,
+      };
+    }
+
+    // ---------- Neurograph + Micro-Protocols ----------
+    const NEUROGRAPH = {
+      reset: ["breath_neutral", "posture_neutral", "env_neutral", "cog_minimal", "cycle_12_20"],
+      focus: ["breath_box", "posture_upright", "cog_single_target", "cycle_20_5", "micro_task_reward"],
+      calm: ["breath_slow", "posture_supported", "cog_fact_label", "env_warm_dim", "cycle_10_15"],
+      drive: ["breath_power", "posture_forward", "cog_sprint_blocks", "env_cool_rhythmic", "cycle_20_5_drive"],
+      euphoria: ["breath_wave", "env_aesthetic", "cog_gratitude_image", "micro_body_music", "cycle_12_20"],
+      social: ["breath_soft", "env_soft_light", "cog_other_focus", "micro_eye_contact", "cycle_social"],
+      sleep: ["breath_4_7_8", "posture_recline", "env_dark_cool", "cog_downshift", "cycle_sleep"],
+    };
+
+    const MICRO_PROTOCOLS = {
+      breath_box: {
+        label: "Box breathing",
+        text: "Box-breathing 4–4–4–4 for 2–3 minutes, then transition into 6–2–6–0 nasal breathing while engaged with your task.",
+      },
+      breath_slow: {
+        label: "Slow diaphragmatic",
+        text: "4–6 breaths per minute: inhale 4s through the nose, exhale 6–8s through the mouth, gentle pause 2s at the bottom. Let the belly move more than the chest.",
+      },
+      breath_power: {
+        label: "Power breathing",
+        text: "Run 3 cycles of 10 fast nasal inhales with relaxed mouth exhales, then one long 10–12s exhale. Rest 20–30s between cycles. Stop if dizzy.",
+      },
+      breath_wave: {
+        label: "Wave breathing",
+        text: "Inhale 5s from lower ribs up to collarbones, exhale 7–8s as if dimming the lights. Imagine the inhale as a rising wave and the exhale as its slow fall.",
+      },
+      breath_neutral: {
+        label: "Neutral nasal",
+        text: "Breathe only through the nose if possible. Do not force any pattern—only extend the exhale by 1–2 seconds whenever you catch yourself holding your breath.",
+      },
+      breath_soft: {
+        label: "Soft social breath",
+        text: "Breathe quietly through the nose, matching the cadence of relaxed conversation: ~3–4s inhale, 4–5s exhale, no hard pauses.",
+      },
+      breath_4_7_8: {
+        label: "4–7–8 pre-sleep",
+        text: "Inhale quietly through the nose for 4 seconds, hold for 7 seconds, exhale through the mouth for 8 seconds. Repeat 4–8 times, then return to normal nasal breathing.",
+      },
+
+      posture_upright: {
+        label: "Upright focus",
+        text: "Sit upright, hips slightly above knees, feet flat. Screen at eye level. Keep shoulders relaxed but do not let the spine collapse.",
+      },
+      posture_supported: {
+        label: "Supported calm",
+        text: "Sit or lie with full back support. Let the jaw unclench, tongue resting gently on the palate, hands open or resting on thighs.",
+      },
+      posture_forward: {
+        label: "Forward drive",
+        text: "Stand or sit on the edge of your chair, slight forward lean from the hips, feet planted firmly. Hands free for quick actions.",
+      },
+      posture_recline: {
+        label: "Reclined descent",
+        text: "Lie on your back or recline at 20–30°. Support neck and knees. Remove strain from lower back and shoulders.",
+      },
+      posture_neutral: {
+        label: "Neutral baseline",
+        text: "Assume any posture you can hold for 15 minutes without pain, but avoid slumped positions that compress the diaphragm.",
+      },
+
+      env_warm_dim: {
+        label: "Warm & dim",
+        text: "Lower the light intensity. Choose warmer light if possible. Reduce high-frequency noise and notifications.",
+      },
+      env_cool_rhythmic: {
+        label: "Cool & rhythmic",
+        text: "Slightly cool the room if you can. Use rhythmic but non-lyrical music between work blocks, silence or low-volume ambient during intense focus.",
+      },
+      env_aesthetic: {
+        label: "Aesthetic upgrade",
+        text: "Add one sensory upgrade: better lighting, a texture you like, a scent, or a visual object that represents the state you want.",
+      },
+      env_neutral: {
+        label: "Neutral pruning",
+        text: "Remove one visible clutter item and mute one notification source. No perfection—just two tiny edits.",
+      },
+      env_dark_cool: {
+        label: "Dark & cool",
+        text: "Dim the room to the lowest comfortable level. Keep it cool. Remove bright screens or use warm, low-brightness mode.",
+      },
+      env_soft_light: {
+        label: "Soft social field",
+        text: "Set lighting to soft and non-harsh. Reduce background noise so voices can become the main signal.",
+      },
+
+      cog_single_target: {
+        label: "Single target lock",
+        text: "Choose exactly one target (one tab, one document, or one physical task). No switching until the timer or block completes.",
+      },
+      cog_fact_label: {
+        label: "Factual labeling",
+        text: "When emotion spikes, label one factual sentence out loud (e.g., “I am running a 10-minute protocol”) instead of narrating a story.",
+      },
+      cog_sprint_blocks: {
+        label: "Sprint blocks",
+        text: "Define 3 micro-goals that can each be completed in 5–7 minutes. Work only on one at a time; after each block, insert a quick reset.",
+      },
+      cog_gratitude_image: {
+        label: "Gratitude image",
+        text: "Bring to mind one person, place, or memory that reliably feels good. Visualize it in detail for 30–60 seconds—light, texture, temperature.",
+      },
+      cog_minimal: {
+        label: "Minimal narration",
+        text: "For this block, you are not allowed to explain your feelings internally. Replace all explanations with a single word or 1-line description.",
+      },
+      cog_other_focus: {
+        label: "Other-centering",
+        text: "Direct attention to the other person’s micro-signals: eyes, shoulders, micro-pauses. Aim to notice, not judge or fix.",
+      },
+      cog_downshift: {
+        label: "Cognitive downshift",
+        text: "Let go of planning tomorrow. Only permit yourself thoughts that are within the next 10 minutes (e.g., “breath”, “pillow”, “warmth”).",
+      },
+
+      micro_task_reward: {
+        label: "Task–reward loop",
+        text: "After each 5–10 minute focus block, stand up, stretch or look far away for 20 seconds, drink water, then return. This anchors dopamine to completion, not novelty.",
+      },
+      micro_body_music: {
+        label: "Body–music sync",
+        text: "Put on one track that makes you feel good. For the duration of the track, let micro-movements (head, shoulders) sync to the rhythm without analysis.",
+      },
+      micro_eye_contact: {
+        label: "Eye-contact pulses",
+        text: "Use 2–3 second bouts of soft eye contact followed by brief glances away to reduce intensity. Let your face relax between bursts.",
+      },
+
+      cycle_20_5: {
+        label: "20/5 focus cycle",
+        text: "Work 20 minutes, then detach completely for 5 minutes (no phone scrolling). Repeat once if your rating stays above 6/10.",
+      },
+      cycle_10_15: {
+        label: "10–15 calm cycle",
+        text: "Run the protocol for 10–15 minutes. End as soon as your state feels clearly more stable, even if that shift is subtle.",
+      },
+      cycle_20_5_drive: {
+        label: "20/5 drive loop",
+        text: "Work 20 minutes at high intensity, 5 minutes of physical reset (walk, light movement). Repeat up to 3 cycles if you remain above 7/10 energy.",
+      },
+      cycle_12_20: {
+        label: "12–20 flexible",
+        text: "Run for 12–20 minutes depending on how your body responds. End with 3 deliberately slow breaths and a quick state rating.",
+      },
+      cycle_social: {
+        label: "Social window",
+        text: "For the next 15–25 minutes, prioritize listening, simple questions, and non-rushed responses. No parallel phone use.",
+      },
+      cycle_sleep: {
+        label: "Pre-sleep descent",
+        text: "Apply for 15–25 minutes, then stop efforting. Let sleep come from boredom rather than forcing it.",
+      },
+    };
+
+    function buildStateTags(state) {
+      const tags = [];
+      const nt = state.neurotransmitters;
+      const h = state.hormones;
+      const e = state.emotions;
+
+      function add(prefix, key, val) {
+        if (val === "up") tags.push(prefix + key + "+");
+        else if (val === "down") tags.push(prefix + key + "–");
+      }
+      add("DA", "", nt.dopamine);
+      add("5HT", "", nt.serotonin);
+      add("ACh", "", nt.acetylcholine);
+      add("GABA", "", nt.gaba);
+      add("T", "", h.testosterone);
+      add("E", "", h.estrogen);
+      add("Oxy", "", h.oxytocin);
+      add("Cort", "", h.cortisol);
+
+      if (e.focus) tags.push("focus");
+      if (e.calm) tags.push("calm");
+      if (e.drive) tags.push("drive");
+      if (e.euphoria) tags.push("euphoria");
+      if (e.grounded) tags.push("grounded");
+      if (e.social) tags.push("social");
+      tags.push("mode:" + state.mode);
+
+      return tags.filter(Boolean);
+    }
+
+    function compileNIS(state) {
+      const modePrograms = NEUROGRAPH[state.mode] || NEUROGRAPH["reset"];
+
+      const nt = state.neurotransmitters;
+      const h = state.hormones;
+      const e = state.emotions;
+
+      const extra = [];
+      if (nt.dopamine === "down") extra.push("micro_task_reward");
+      if (nt.serotonin === "down") extra.push("cog_fact_label");
+      if (nt.gaba === "up") extra.push("breath_slow");
+      if (h.cortisol === "down") extra.push("env_warm_dim");
+      if (h.oxytocin === "up" || e.euphoria) extra.push("cog_gratitude_image");
+      if (e.focus) extra.push("cog_single_target");
+      if (e.drive) extra.push("cog_sprint_blocks");
+      if (e.grounded) extra.push("breath_slow", "env_neutral");
+      if (e.social) extra.push("env_soft_light", "cog_other_focus");
+
+      const mergedIds = Array.from(new Set([...modePrograms, ...extra]));
+      const sections = mergedIds
+        .map((id, index) => {
+          const proto = MICRO_PROTOCOLS[id];
+          if (!proto) return null;
+          return `${index + 1}) ${proto.label}\n   ${proto.text}`;
+        })
+        .filter(Boolean)
+        .join("\n\n");
+
+      const tags = buildStateTags(state);
+      const summaryLine = tags.length
+        ? "STATE VECTOR: " + tags.join(" · ")
+        : "STATE VECTOR: neutral baseline";
+
+      return (
+        "NEURAL INSTRUCTION SEQUENCE (NIS)\n" +
+        "---------------------------------\n" +
+        summaryLine +
+        "\n\n" +
+        sections +
+        "\n\n" +
+        "EXECUTION WINDOW:\n" +
+        "   Apply this sequence for one block (see cycle instructions). When complete, rate your state 0–10 and optionally re-run with small tweaks.\n"
+      );
+    }
+
+    // ---------- Audio engine (Warm 4D neuro-psychoacoustic) ----------
+    let audioCtx = null;
+
+    let mainOscL = null;
+    let mainOscR = null;
+    let harmOscL = null;
+    let harmOscR = null;
+    let gainL = null;
+    let gainR = null;
+    let filterL = null;
+    let filterR = null;
+    let masterGain = null;
+    let merger = null;
+
+    let audioRunning = false;
+    let isochronicEnabled = true;
+    let binauralEnabled = false;
+
+    let lastAudioParams = {
+      baseFreq: 300,
+      harmFreq: 375,
+      modRate: 10,
+      isoDepth: 0.6,
+      gain: 0.08,
+      brightness: 0.65,
+      binOffset: 10,
+      dissonance: 0.0,
+    };
+
+    function ensureAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function ntVal(x) {
+      const map = { up: 1, neutral: 0, down: -1 };
+      return map[x] ?? 0;
+    }
+
+    function computeAudioParams(state) {
+      const nt = state.neurotransmitters;
+      const h = state.hormones;
+      const e = state.emotions;
+      const mode = state.mode;
+
+      let baseFreqMap = {
+        reset: 300,
+        focus: 340,
+        calm: 260,
+        drive: 360,
+        euphoria: 320,
+        social: 290,
+        sleep: 230,
+      };
+      let modRateMap = {
+        reset: 10,
+        focus: 17,
+        calm: 9,
+        drive: 19,
+        euphoria: 11.5,
+        social: 11,
+        sleep: 4.5,
+      };
+
+      let baseFreq = baseFreqMap[mode] ?? 300;
+      let modRate = modRateMap[mode] ?? 10;
+
+      let gain = 0.075;
+      let brightness = 0.65;
+      let isoDepth = 0.6;
+      let dissonance = 0.0;
+      let binOffset = 10;
+
+      // --- Neurotransmitters ---
+      if (nt.dopamine === "up") {
+        baseFreq += 25;
+        modRate += 2.2;
+        brightness += 0.08;
+        dissonance -= 0.25;
+      } else if (nt.dopamine === "down") {
+        baseFreq -= 15;
+        modRate -= 1.2;
+        brightness -= 0.05;
+        dissonance += 0.25;
+      }
+
+      if (nt.serotonin === "up") {
+        modRate -= 1.3;
+        brightness += 0.05;
+        isoDepth -= 0.05;
+        dissonance -= 0.15;
+      } else if (nt.serotonin === "down") {
+        modRate += 1.3;
+        brightness -= 0.05;
+        dissonance += 0.15;
+      }
+
+      if (nt.acetylcholine === "up") {
+        baseFreq += 18;
+        modRate += 1.2;
+        brightness += 0.06;
+      } else if (nt.acetylcholine === "down") {
+        baseFreq -= 10;
+        modRate -= 0.8;
+        brightness -= 0.04;
+      }
+
+      if (nt.gaba === "up") {
+        modRate -= 1.4;
+        gain -= 0.008;
+        dissonance -= 0.2;
+      } else if (nt.gaba === "down") {
+        modRate += 1.5;
+        dissonance += 0.2;
+      }
+
+      // --- Hormones ---
+      if (h.testosterone === "up") {
+        baseFreq += 15;
+        brightness += 0.04;
+        gain += 0.008;
+      } else if (h.testosterone === "down") {
+        baseFreq -= 10;
+        gain -= 0.005;
+      }
+
+      if (h.estrogen === "up") {
+        brightness += 0.03;
+      } else if (h.estrogen === "down") {
+        brightness -= 0.03;
+      }
+
+      if (h.oxytocin === "up") {
+        brightness += 0.06;
+        dissonance -= 0.15;
+      } else if (h.oxytocin === "down") {
+        brightness -= 0.04;
+        dissonance += 0.1;
+      }
+
+      if (h.cortisol === "up") {
+        modRate += 2.5;
+        brightness -= 0.06;
+        dissonance += 0.3;
+      } else if (h.cortisol === "down") {
+        modRate -= 1.7;
+        dissonance -= 0.25;
+      }
+
+      // --- Emotions ---
+      if (e.focus) {
+        modRate *= 1.1;
+        isoDepth += 0.05;
+        brightness += 0.03;
+      }
+      if (e.calm) {
+        modRate *= 0.8;
+        gain *= 0.9;
+        dissonance -= 0.15;
+        isoDepth *= 0.9;
+      }
+      if (e.drive) {
+        modRate *= 1.15;
+        gain *= 1.1;
+        brightness += 0.04;
+      }
+      if (e.euphoria) {
+        brightness += 0.1;
+        isoDepth += 0.05;
+        dissonance -= 0.1;
+      }
+      if (e.grounded) {
+        modRate *= 0.9;
+        dissonance -= 0.1;
+        brightness -= 0.02;
+      }
+      if (e.social) {
+        brightness += 0.05;
+        dissonance -= 0.05;
+      }
+
+      baseFreq = Math.max(180, Math.min(540, baseFreq));
+      modRate = Math.max(1, Math.min(40, modRate));
+      gain = Math.max(0.012, Math.min(0.16, gain));
+      brightness = Math.max(0, Math.min(1, brightness));
+      isoDepth = Math.max(0, Math.min(1, isoDepth));
+      dissonance = Math.max(-1, Math.min(1, dissonance));
+
+      let ratio;
+      if (dissonance <= -0.3) {
+        ratio = 5 / 4;
+      } else if (dissonance < 0.25) {
+        ratio = brightness > 0.7 ? 3 / 2 : 5 / 4;
+      } else {
+        ratio = 7 / 5;
+      }
+      let harmFreq = baseFreq * ratio;
+      harmFreq = Math.max(220, Math.min(2000, harmFreq));
+
+      if (mode === "sleep") binOffset = 4;
+      else if (mode === "calm") binOffset = 8;
+      else if (mode === "focus") binOffset = 14;
+      else if (mode === "drive") binOffset = 18;
+      else if (mode === "euphoria") binOffset = 12;
+      else if (mode === "social") binOffset = 10;
+      else binOffset = 10;
+      binOffset += dissonance * 2;
+      binOffset = Math.max(0, Math.min(40, binOffset));
+
+      return { baseFreq, harmFreq, modRate, isoDepth, gain, brightness, binOffset, dissonance };
+    }
+
+    function startAudio(state) {
+      if (!audioEnable || !audioEnable.checked) {
+        stopAudio();
+        return;
+      }
+      ensureAudioContext();
+      if (!audioCtx) return;
+
+      const params = computeAudioParams(state);
+
+      params.baseFreq = Number(baseFreqSlider.value || params.baseFreq);
+      params.harmFreq = Number(harmFreqSlider.value || params.harmFreq);
+      params.modRate = Number(modRateSlider.value || params.modRate);
+      params.isoDepth = Number(isoDepthSlider.value || params.isoDepth);
+      params.binOffset = Number(binOffsetSlider.value || params.binOffset);
+
+      lastAudioParams = params;
+      syncSlidersFromParams(params);
+      updateBandLabel(params.modRate);
+
+      const useBinaural = binauralToggleEl.checked;
+      isochronicEnabled = isochronicToggleEl.checked;
+      binauralEnabled = useBinaural;
+
+      if (!mainOscL) {
+        mainOscL = audioCtx.createOscillator();
+        mainOscR = audioCtx.createOscillator();
+        harmOscL = audioCtx.createOscillator();
+        harmOscR = audioCtx.createOscillator();
+
+        mainOscL.type = "sine";
+        mainOscR.type = "sine";
+        harmOscL.type = "triangle";
+        harmOscR.type = "triangle";
+
+        gainL = audioCtx.createGain();
+        gainR = audioCtx.createGain();
+        filterL = audioCtx.createBiquadFilter();
+        filterR = audioCtx.createBiquadFilter();
+        masterGain = audioCtx.createGain();
+        merger = audioCtx.createChannelMerger(2);
+
+        filterL.type = "lowpass";
+        filterR.type = "lowpass";
+
+        mainOscL.connect(gainL);
+        harmOscL.connect(gainL);
+        gainL.connect(filterL);
+        filterL.connect(merger, 0, 0);
+
+        mainOscR.connect(gainR);
+        harmOscR.connect(gainR);
+        gainR.connect(filterR);
+        filterR.connect(merger, 0, 1);
+
+        merger.connect(masterGain);
+        masterGain.connect(audioCtx.destination);
+
+        mainOscL.start();
+        mainOscR.start();
+        harmOscL.start();
+        harmOscR.start();
+      }
+
+      const leftBase = params.baseFreq;
+      const rightBase = useBinaural ? params.baseFreq + params.binOffset : params.baseFreq;
+      const leftHarm = params.harmFreq;
+      const rightHarm = useBinaural ? params.harmFreq + params.binOffset : params.harmFreq;
+
+      const t = audioCtx.currentTime;
+      mainOscL.frequency.setTargetAtTime(leftBase, t, 0.15);
+      mainOscR.frequency.setTargetAtTime(rightBase, t, 0.15);
+      harmOscL.frequency.setTargetAtTime(leftHarm, t, 0.15);
+      harmOscR.frequency.setTargetAtTime(rightHarm, t, 0.15);
+
+      gainL.gain.setTargetAtTime(0.55, t, 0.12);
+      gainR.gain.setTargetAtTime(0.55, t, 0.12);
+      masterGain.gain.setTargetAtTime(params.gain, t, 0.12);
+
+      const baseCutoff = 1200;
+      const extra = 4200 * params.brightness;
+      const cutoff = baseCutoff + extra;
+      filterL.frequency.setTargetAtTime(cutoff, t, 0.2);
+      filterR.frequency.setTargetAtTime(cutoff, t, 0.2);
+      filterL.Q.setTargetAtTime(0.7 + params.dissonance * 0.4, t, 0.2);
+      filterR.Q.setTargetAtTime(0.7 + params.dissonance * 0.4, t, 0.2);
+
+      audioRunning = true;
+    }
+
+    function stopAudio() {
+      if (masterGain && audioCtx) {
+        masterGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.12);
+      }
+      audioRunning = false;
+    }
+
+    // ---------- Visualizer (retro pixel brain map + CNC tool) ----------
+    const canvas = document.getElementById("vizCanvas");
+    const ctx = canvas.getContext("2d");
+    let vizLastTime = 0;
+    let latestState = null;
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function clamp01(x) {
+      return x < 0 ? 0 : x > 1 ? 1 : x;
+    }
+
+    function drawViz(timestamp) {
+      if (!vizLastTime) vizLastTime = timestamp;
+      vizLastTime = timestamp;
+
+      const { width, height } = canvas;
+      ctx.clearRect(0, 0, width, height);
+
+      const t = performance.now() / 1000;
+      const modRate = lastAudioParams.modRate || 10;
+      const brightness = lastAudioParams.brightness ?? 0.65;
+      const isoDepth = lastAudioParams.isoDepth ?? 0.6;
+
+      const phase = Math.sin(2 * Math.PI * modRate * t);
+
+      // always have current state
+      const state = latestState || snapshotState();
+      latestState = state;
+      const nt = state.neurotransmitters;
+      const h = state.hormones;
+      const e = state.emotions;
+
+      const skullRadius = Math.min(width, height) * 0.28;
+      const skullX = width / 2;
+      const skullY = height * 0.58;
+
+      const bgGrad = ctx.createRadialGradient(
+        skullX, skullY, skullRadius * 0.3,
+        skullX, skullY, skullRadius * 2.1
+      );
+      bgGrad.addColorStop(0, `rgba(255, 190, 135, ${0.32 + 0.2 * brightness})`);
+      bgGrad.addColorStop(0.5, "rgba(60, 28, 50, 0.95)");
+      bgGrad.addColorStop(1, "rgba(8, 4, 14, 0)");
+      ctx.fillStyle = bgGrad;
+      ctx.beginPath();
+      ctx.arc(skullX, skullY, skullRadius * 2.1, 0, Math.PI * 2);
+      ctx.fill();
+
+      // skull outline
+      ctx.save();
+      ctx.translate(skullX, skullY);
+      ctx.scale(1.2, 1.0);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, skullRadius, skullRadius * 0.9, 0, 0, Math.PI * 2);
+      const headGrad = ctx.createLinearGradient(-skullRadius, 0, skullRadius, 0);
+      headGrad.addColorStop(0, "rgba(255, 230, 206, 0.65)");
+      headGrad.addColorStop(0.5, "rgba(255, 184, 120, 0.95)");
+      headGrad.addColorStop(1, "rgba(255, 220, 190, 0.7)");
+      ctx.strokeStyle = headGrad;
+      ctx.lineWidth = 2 * window.devicePixelRatio;
+      ctx.stroke();
+      ctx.restore();
+
+      // skull fill
+      ctx.save();
+      ctx.beginPath();
+      ctx.ellipse(skullX, skullY, skullRadius * 0.98, skullRadius * 0.9, 0, 0, Math.PI * 2);
+      const chromeGrad = ctx.createRadialGradient(
+        skullX - skullRadius * 0.3, skullY - skullRadius * 0.25, skullRadius * 0.1,
+        skullX + skullRadius * 0.3, skullY + skullRadius * 0.35, skullRadius * 1.2
+      );
+      chromeGrad.addColorStop(0, "rgba(255, 255, 255, 0.8)");
+      chromeGrad.addColorStop(0.3, "rgba(255, 215, 180, 0.9)");
+      chromeGrad.addColorStop(0.55, "rgba(60, 24, 40, 0.98)");
+      chromeGrad.addColorStop(1, "rgba(10, 6, 18, 1)");
+      ctx.fillStyle = chromeGrad;
+      ctx.fill();
+      ctx.restore();
+
+      // brain region (top/front view) with retro pixel map
+      const brainRadius = skullRadius * 0.65;
+      ctx.save();
+      ctx.beginPath();
+      ctx.ellipse(skullX, skullY - skullRadius * 0.1, brainRadius, brainRadius * 0.75, 0, 0, Math.PI * 2);
+      ctx.clip();
+
+      // dark base
+      ctx.fillStyle = "rgba(10, 4, 16, 1)";
+      ctx.fillRect(skullX - brainRadius, skullY - brainRadius * 1.2, brainRadius * 2, brainRadius * 2.4);
+
+      // base glow field
+      const brainGrad = ctx.createRadialGradient(
+        skullX, skullY - skullRadius * 0.15, brainRadius * 0.3,
+        skullX, skullY, brainRadius * 1.2
+      );
+      brainGrad.addColorStop(0, `rgba(255, 240, 220, ${0.15 + 0.12 * brightness})`);
+      brainGrad.addColorStop(0.5, `rgba(255, 200, 150, ${0.28 + 0.2 * brightness})`);
+      brainGrad.addColorStop(1, "rgba(40, 16, 38, 0.96)");
+      ctx.fillStyle = brainGrad;
+      ctx.fillRect(skullX - brainRadius, skullY - brainRadius * 1.2, brainRadius * 2, brainRadius * 2.4);
+
+      // region activations (conceptual, not literal anatomy)
+      const val = (x) => ntVal(x);
+      const da = val(nt.dopamine);
+      const se = val(nt.serotonin);
+      const ach = val(nt.acetylcholine);
+      const ga = val(nt.gaba);
+      const cort = val(h.cortisol);
+      const oxy = val(h.oxytocin);
+
+      let rewardAct = 0.5 + 0.3 * da + 0.15 * (e.euphoria ? 1 : 0) + 0.1 * (e.drive ? 1 : 0) - 0.1 * (cort > 0 ? 1 : 0);
+      let moodAct = 0.5 + 0.25 * se + 0.15 * (oxy > 0 ? 1 : 0) + 0.1 * (e.calm ? 1 : 0) + 0.1 * (e.social ? 1 : 0);
+      let stressAct = 0.5 + 0.35 * cort - 0.2 * ga - 0.1 * (e.calm ? 1 : 0) - 0.1 * (e.grounded ? 1 : 0);
+      let focusAct = 0.5 + 0.3 * ach + 0.15 * (e.focus ? 1 : 0) + 0.1 * (e.drive ? 1 : 0);
+      let calmAct = 0.5 + 0.25 * ga + 0.2 * (e.calm ? 1 : 0) + 0.1 * (e.grounded ? 1 : 0);
+      let socialAct = 0.5 + 0.25 * oxy + 0.2 * (e.social ? 1 : 0);
+
+      rewardAct = clamp01(rewardAct);
+      moodAct = clamp01(moodAct);
+      stressAct = clamp01(stressAct);
+      focusAct = clamp01(focusAct);
+      calmAct = clamp01(calmAct);
+      socialAct = clamp01(socialAct);
+
+      // retro pixel grid
+      const cols = 30;
+      const rows = 18;
+      const pxW = (brainRadius * 2) / cols;
+      const pxH = (brainRadius * 1.5) / rows;
+
+      for (let iy = 0; iy < rows; iy++) {
+        for (let ix = 0; ix < cols; ix++) {
+          const u = (ix / (cols - 1)) * 2 - 1;     // -1..1 left-right
+          const v = (iy / (rows - 1)) * 2 - 1;     // -1..1 top-bottom
+
+          // ellipse mask for brain
+          const inBrain = u * u + (v * 0.85) * (v * 0.85) <= 1;
+          if (!inBrain) continue;
+
+          // conceptual sub-regions (top/front view)
+          // front (executive/reward): v in [-0.1, 0.45]
+          const isFront = v > -0.15 && v < 0.45;
+          // back: v < -0.15
+          const isBack = v <= -0.15;
+          // midline (reward/focus)
+          const isMidline = Math.abs(u) < 0.25;
+          // left/right (social-ish)
+          const isLeft = u < -0.1;
+          const isRight = u > 0.1;
+
+          let act = 0;
+
+          // reward band: midline, front
+          if (isFront && isMidline) act += rewardAct * 1.0;
+
+          // focus band: front, slightly off midline
+          if (isFront && Math.abs(u) >= 0.18 && Math.abs(u) < 0.65) {
+            act += focusAct * 0.8;
+          }
+
+          // mood spread: broad, especially mid–back
+          if (v < 0.2 && v > -0.6) {
+            act += moodAct * 0.5;
+          }
+
+          // calm belt: back-mid
+          if (isBack && Math.abs(u) < 0.7) {
+            act += calmAct * 0.7;
+          }
+
+          // social lobes: left/right frontal
+          if (isFront && (isLeft || isRight)) {
+            act += socialAct * 0.9;
+          }
+
+          // stress: deep central core (slightly darker hot flashes)
+          if (isMidline && v > -0.4 && v < 0.1) {
+            act += stressAct * 1.2;
+          }
+
+          act = clamp01(act);
+
+          // idle noise so even low activation flickers subtly
+          const noise = 0.05 * Math.sin(t * 5 + ix * 0.7 + iy * 1.3);
+          let final = clamp01(act * 0.9 + noise);
+
+          if (final < 0.05) continue;
+
+          // color: warm oranges, with stress adding red tint
+          const stressMix = stressAct * 0.7;
+          const baseR = 220 + 35 * final + 25 * stressMix;
+          const baseG = 150 + 55 * final - 40 * stressMix;
+          const baseB = 120 + 25 * final - 20 * stressMix;
+
+          const alpha = 0.18 + 0.6 * final;
+
+          const px = skullX + u * brainRadius;
+          const py = skullY - skullRadius * 0.1 + v * brainRadius * 0.75;
+
+          ctx.fillStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${alpha})`;
+          ctx.fillRect(
+            px - pxW * 0.5,
+            py - pxH * 0.5,
+            pxW * 0.95,
+            pxH * 0.95
+          );
+        }
+      }
+
+      ctx.restore();
+
+      // CNC scanning tool at top of head
+      const rateFactor = 0.3 + 0.7 * (modRate / 40);
+      const scanRadius = skullRadius * 0.9;
+      const toolAngle = t * rateFactor;
+      const toolX = skullX + Math.cos(toolAngle) * scanRadius;
+      const toolY = skullY - skullRadius * 1.2;
+
+      const toolWidth = skullRadius * 0.35;
+      const toolHeight = skullRadius * 0.18;
+
+      ctx.save();
+      ctx.translate(toolX, toolY);
+
+      ctx.beginPath();
+      ctx.roundRect(
+        -toolWidth / 2,
+        -toolHeight / 2,
+        toolWidth,
+        toolHeight,
+        skullRadius * 0.06
+      );
+      const toolGrad = ctx.createLinearGradient(-toolWidth / 2, 0, toolWidth / 2, 0);
+      toolGrad.addColorStop(0, "rgba(255, 246, 232, 0.98)");
+      toolGrad.addColorStop(0.4, "rgba(255, 208, 160, 0.96)");
+      toolGrad.addColorStop(1, "rgba(255, 236, 215, 0.98)");
+      ctx.fillStyle = toolGrad;
+      ctx.fill();
+      ctx.strokeStyle = "rgba(120, 60, 40, 0.95)";
+      ctx.lineWidth = 1.5 * window.devicePixelRatio;
+      ctx.stroke();
+
+      ctx.beginPath();
+      const ventCount = 3;
+      for (let i = 0; i < ventCount; i++) {
+        const vx = -toolWidth * 0.3 + (i * toolWidth) / (ventCount - 1);
+        ctx.moveTo(vx - toolWidth * 0.06, -toolHeight * 0.25);
+        ctx.lineTo(vx + toolWidth * 0.06, -toolHeight * 0.25);
+      }
+      ctx.strokeStyle = "rgba(155, 90, 60, 0.85)";
+      ctx.lineWidth = 1 * window.devicePixelRatio;
+      ctx.stroke();
+
+      const ledCount = 3;
+      for (let i = 0; i < ledCount; i++) {
+        const px = -toolWidth * 0.25 + (i * toolWidth) / (ledCount - 1);
+        const py = toolHeight * 0.05;
+        const blink = 0.5 + 0.5 * Math.sin(t * 5 + i + phase);
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255, 200, 150, ${0.4 + 0.4 * blink})`;
+        ctx.arc(px, py, skullRadius * 0.03, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+
+      const beamBaseY = skullY - skullRadius * 0.25;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(toolX, toolY + toolHeight / 2);
+      ctx.lineTo(toolX, beamBaseY);
+      ctx.strokeStyle = "rgba(255, 240, 215, 0.95)";
+      ctx.lineWidth = 2 * window.devicePixelRatio;
+      ctx.stroke();
+      ctx.restore();
+
+      const beamCount = 5;
+      for (let i = 0; i < beamCount; i++) {
+        const spread = skullRadius * 0.55;
+        const offsetNorm = (i / (beamCount - 1)) - 0.5;
+        const targetX = skullX + offsetNorm * spread;
+        const targetY = skullY - skullRadius * 0.3 + offsetNorm * skullRadius * 0.2;
+
+        const strength = 0.5 + 0.5 * Math.sin(2 * Math.PI * modRate * t + i);
+        const depthFactor = 0.2 + isoDepth * 0.8;
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(toolX, beamBaseY);
+        ctx.quadraticCurveTo(
+          (toolX + targetX) / 2,
+          beamBaseY - skullRadius * 0.2 * strength,
+          targetX,
+          targetY
+        );
+        const alpha = 0.12 + depthFactor * 0.4 * (isochronicEnabled ? 1 : 0.6);
+        const hueShift = binauralEnabled ? 1 : 0;
+        ctx.strokeStyle = `rgba(${255 - 40 * hueShift}, ${200 - 20 * hueShift}, ${170 + 10 * hueShift}, ${alpha})`;
+        ctx.lineWidth = (1 + strength * 1.5) * window.devicePixelRatio;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.ellipse(skullX, skullY, skullRadius * (1.08 + 0.04 * brightness), skullRadius * 0.9, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(255, 228, 205, ${0.35 + 0.2 * brightness})`;
+      ctx.lineWidth = 1.5 * window.devicePixelRatio;
+      ctx.stroke();
+      ctx.restore();
+
+      // audio amplitude modulation for isochronic depth
+      if (audioCtx && masterGain && audioRunning) {
+        const now = audioCtx.currentTime;
+        const baseGain = lastAudioParams.gain || 0.08;
+        const rate = lastAudioParams.modRate || 10;
+        const depth = isochronicEnabled ? (lastAudioParams.isoDepth || 0.6) : 0;
+        const pulse = 0.5 + 0.5 * Math.sin(2 * Math.PI * rate * now);
+        const gainVal = baseGain * (1 - depth * 0.55 + depth * pulse);
+        masterGain.gain.setTargetAtTime(gainVal, now, 0.03);
+      } else if (audioCtx && masterGain && !audioRunning) {
+        masterGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.1);
+      }
+
+      requestAnimationFrame(drawViz);
+    }
+    requestAnimationFrame(drawViz);
+
+    // ---------- EEG band label ----------
+    const bandLabel = document.getElementById("bandLabel");
+    function bandFromFreq(f) {
+      if (f < 3) return "delta (~0.5–4 Hz)";
+      if (f < 7) return "theta (~4–7 Hz)";
+      if (f < 13) return "alpha (~8–12 Hz)";
+      if (f < 30) return "beta (~13–30 Hz)";
+      return "gamma (>30 Hz)";
+    }
+    function updateBandLabel(freq) {
+      bandLabel.textContent = bandFromFreq(freq);
+    }
+
+    // ---------- UI wiring ----------
+    const playBtn = document.getElementById("playBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const nisOutput = document.getElementById("nisOutput");
+    const stateTagsEl = document.getElementById("stateTags");
+    const ratingInput = document.getElementById("ratingInput");
+    const saveRunBtn = document.getElementById("saveRunBtn");
+    const historyList = document.getElementById("historyList");
+    const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+    const recommendationLabel = document.getElementById("recommendation-label");
+    const audioEnable = document.getElementById("audioEnable");
+    const isochronicToggleEl = document.getElementById("isochronicToggle");
+    const binauralToggleEl = document.getElementById("binauralToggle");
+
+    const baseFreqSlider = document.getElementById("baseFreqSlider");
+    const harmFreqSlider = document.getElementById("harmFreqSlider");
+    const modRateSlider = document.getElementById("modRateSlider");
+    const isoDepthSlider = document.getElementById("isoDepthSlider");
+    const binOffsetSlider = document.getElementById("binOffsetSlider");
+
+    const baseFreqValue = document.getElementById("baseFreqValue");
+    const harmFreqValue = document.getElementById("harmFreqValue");
+    const modRateValue = document.getElementById("modRateValue");
+    const isoDepthValue = document.getElementById("isoDepthValue");
+    const binOffsetValue = document.getElementById("binOffsetValue");
+
+    let latestNIS = "";
+
+    function syncSlidersFromParams(params) {
+      baseFreqSlider.value = params.baseFreq;
+      harmFreqSlider.value = params.harmFreq;
+      modRateSlider.value = params.modRate;
+      isoDepthSlider.value = params.isoDepth;
+      binOffsetSlider.value = params.binOffset;
+      baseFreqValue.textContent = Math.round(params.baseFreq);
+      harmFreqValue.textContent = Math.round(params.harmFreq);
+      modRateValue.textContent = params.modRate.toFixed(1);
+      isoDepthValue.textContent = params.isoDepth.toFixed(2);
+      binOffsetValue.textContent = params.binOffset.toFixed(1);
+    }
+
+    function renderStateTags(tags) {
+      stateTagsEl.innerHTML = "";
+      if (!tags || !tags.length) return;
+      tags.forEach((t) => {
+        const span = document.createElement("div");
+        span.className = "state-tag";
+        span.textContent = t;
+        stateTagsEl.appendChild(span);
+      });
+    }
+
+    function handleCompile() {
+      const state = snapshotState();
+      const nis = compileNIS(state);
+      latestState = state;
+      latestNIS = nis;
+
+      nisOutput.textContent = nis;
+      const tags = buildStateTags(state);
+      renderStateTags(tags);
+
+      ensureAudioContext();
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+      if (audioEnable.checked) {
+        startAudio(state);
+      } else {
+        stopAudio();
+      }
+    }
+
+    function handleClear() {
+      latestState = null;
+      latestNIS = "";
+      nisOutput.innerHTML =
+        '<div class="nis-placeholder">Cleared. Adjust your inputs and press <strong>Compile NIS + Hybrid Sound</strong> to generate a new sequence.</div>';
+      stateTagsEl.innerHTML = "";
+      stopAudio();
+    }
+
+    playBtn.addEventListener("click", handleCompile);
+    stopBtn.addEventListener("click", handleClear);
+
+    audioEnable.addEventListener("change", () => {
+      if (!latestState) return;
+      if (audioEnable.checked) {
+        startAudio(latestState);
+      } else {
+        stopAudio();
+      }
+    });
+
+    isochronicToggleEl.addEventListener("change", () => {
+      isochronicEnabled = isochronicToggleEl.checked;
+    });
+
+    binauralToggleEl.addEventListener("change", () => {
+      binauralEnabled = binauralToggleEl.checked;
+      if (latestState && audioEnable.checked) {
+        startAudio(latestState);
+      }
+    });
+
+    // Live fine-tune sliders
+    baseFreqSlider.addEventListener("input", () => {
+      const v = Number(baseFreqSlider.value);
+      baseFreqValue.textContent = Math.round(v);
+      lastAudioParams.baseFreq = v;
+      if (audioRunning && mainOscL && mainOscR && audioCtx) {
+        const t = audioCtx.currentTime;
+        const offset = binauralEnabled ? lastAudioParams.binOffset || 0 : 0;
+        mainOscL.frequency.setTargetAtTime(v, t, 0.12);
+        mainOscR.frequency.setTargetAtTime(v + offset, t, 0.12);
+      }
+    });
+
+    harmFreqSlider.addEventListener("input", () => {
+      const v = Number(harmFreqSlider.value);
+      harmFreqValue.textContent = Math.round(v);
+      lastAudioParams.harmFreq = v;
+      if (audioRunning && harmOscL && harmOscR && audioCtx) {
+        const t = audioCtx.currentTime;
+        const offset = binauralEnabled ? lastAudioParams.binOffset || 0 : 0;
+        harmOscL.frequency.setTargetAtTime(v, t, 0.12);
+        harmOscR.frequency.setTargetAtTime(v + offset, t, 0.12);
+      }
+    });
+
+    modRateSlider.addEventListener("input", () => {
+      const v = Number(modRateSlider.value);
+      modRateValue.textContent = v.toFixed(1);
+      lastAudioParams.modRate = v;
+      updateBandLabel(v);
+    });
+
+    isoDepthSlider.addEventListener("input", () => {
+      const v = Number(isoDepthSlider.value);
+      isoDepthValue.textContent = v.toFixed(2);
+      lastAudioParams.isoDepth = v;
+    });
+
+    binOffsetSlider.addEventListener("input", () => {
+      const v = Number(binOffsetSlider.value);
+      binOffsetValue.textContent = v.toFixed(1);
+      lastAudioParams.binOffset = v;
+      if (audioRunning && mainOscR && harmOscR && audioCtx && binauralEnabled) {
+        const t = audioCtx.currentTime;
+        mainOscR.frequency.setTargetAtTime(lastAudioParams.baseFreq + v, t, 0.12);
+        harmOscR.frequency.setTargetAtTime(lastAudioParams.harmFreq + v, t, 0.12);
+      }
+    });
+
+    // React live to state changes
+    const stateInputs = document.querySelectorAll(
+      'input[name="dopamine"],input[name="serotonin"],input[name="acetylcholine"],input[name="gaba"],' +
+      'input[name="testosterone"],input[name="estrogen"],input[name="oxytocin"],input[name="cortisol"],' +
+      'input[name="focus"],input[name="calm"],input[name="drive"],input[name="euphoria"],' +
+      'input[name="grounded"],input[name="social"],#modeSelect'
+    );
+
+    function applyStateToAudio() {
+      const s = snapshotState();
+      latestState = s;
+      const params = computeAudioParams(s);
+      lastAudioParams = params;
+      syncSlidersFromParams(params);
+      updateBandLabel(params.modRate);
+      if (audioEnable.checked) {
+        startAudio(s);
+      }
+    }
+
+    stateInputs.forEach((el) => {
+      el.addEventListener("change", () => {
+        applyStateToAudio();
+      });
+    });
+
+    // ---------- History + Recommendation ----------
+    const STORAGE_KEY = "neurogsynth_sessions_v1";
+
+    function loadHistory() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return [];
+        return parsed;
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveHistory(list) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list.slice(-50)));
+      } catch (e) {}
+    }
+
+    function renderHistory() {
+      const history = loadHistory();
+      historyList.innerHTML = "";
+      if (!history.length) {
+        const div = document.createElement("div");
+        div.textContent = "No sessions saved yet.";
+        div.style.opacity = "0.6";
+        historyList.appendChild(div);
+        recommendationLabel.textContent = "none yet";
+        return;
+      }
+
+      history
+        .slice()
+        .reverse()
+        .forEach((entry) => {
+          const item = document.createElement("div");
+          item.className = "history-item";
+
+          const meta = document.createElement("div");
+          meta.className = "history-meta";
+          const dt = new Date(entry.timestamp);
+          meta.innerHTML =
+            '<span>' +
+            dt.toLocaleDateString() +
+            " " +
+            dt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) +
+            "</span><span>Rating: " +
+            (entry.rating ?? "—") +
+            "/10</span>";
+
+          const tagsDiv = document.createElement("div");
+          tagsDiv.className = "history-tags";
+          entry.tags.forEach((t) => {
+            const span = document.createElement("div");
+            span.className = "history-tag";
+            span.textContent = t;
+            tagsDiv.appendChild(span);
+          });
+
+          item.appendChild(meta);
+          item.appendChild(tagsDiv);
+          historyList.appendChild(item);
+        });
+
+      updateRecommendation(history);
+    }
+
+    function updateRecommendation(history) {
+      const scores = {};
+      history.forEach((h) => {
+        const r = typeof h.rating === "number" ? h.rating : null;
+        if (r === null || r < 7) return;
+        const modeTag = h.tags.find((t) => t.startsWith("mode:"));
+        if (!modeTag) return;
+        scores[modeTag] = (scores[modeTag] || 0) + r;
+      });
+
+      const entries = Object.entries(scores);
+      if (!entries.length) {
+        recommendationLabel.textContent = "collect a few ≥7/10 runs";
+        return;
+      }
+
+      entries.sort((a, b) => b[1] - a[1]);
+      const top = entries[0][0];
+      const mode = top.split(":")[1];
+      recommendationLabel.textContent = mode;
+    }
+
+    function handleSaveRun() {
+      if (!latestState || !latestNIS) {
+        alert("Compile a sequence before saving.");
+        return;
+      }
+      const ratingVal = ratingInput.value.trim();
+      const rating = ratingVal === "" ? null : Math.max(0, Math.min(10, Number(ratingVal)));
+      const tags = buildStateTags(latestState);
+      const history = loadHistory();
+      history.push({
+        timestamp: Date.now(),
+        rating: rating,
+        tags: tags,
+      });
+      saveHistory(history);
+      renderHistory();
+    }
+
+    saveRunBtn.addEventListener("click", handleSaveRun);
+
+    clearHistoryBtn.addEventListener("click", () => {
+      if (!confirm("Clear local session history?")) return;
+      saveHistory([]);
+      renderHistory();
+    });
+
+    // Initial setup
+    syncSlidersFromParams(lastAudioParams);
+    updateBandLabel(lastAudioParams.modRate);
+    renderHistory();
+  </script>
+</body>
+</html>

@@ -2,22 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>NeuroG-Synth ∞ Pattern Lab – by caiusdesigns</title>
+  <title>NeuroG-Synth ∞ V4.2 – by caiusdesigns</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
       color-scheme: dark;
       --bg-0: #050309;
-      --bg-1: #190b33;
+      --bg-1: #191426;
       --bg-2: #07050c;
       --accent: #ffcf7f;
-      --accent-soft: #f8b5a8;
       --accent-strong: #ff7a8b;
+      --accent-soft: #f8b6a8;
       --text-main: #f5f5f5;
       --text-muted: #aea3c8;
       --panel: rgba(14, 9, 30, 0.96);
       --border: rgba(182, 138, 255, 0.9);
-      --grid-line: rgba(120, 90, 180, 0.3);
+      --grid-line: rgba(120, 90, 180, 0.35);
     }
     * { box-sizing: border-box; }
     html, body {
@@ -25,7 +25,8 @@
       padding: 0;
       min-height: 100%;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      background: radial-gradient(circle at top, var(--bg-1) 0, var(--bg-2) 45%, #000 100%);
+      background:
+        radial-gradient(circle at top, #191426 0, #07050c 40%, #000 100%);
       color: var(--text-main);
     }
     body {
@@ -43,8 +44,8 @@
 
     header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       flex-wrap: wrap;
       gap: 12px;
       margin-bottom: 18px;
@@ -79,7 +80,7 @@
       border-color: rgba(255, 255, 255, 0.52);
     }
     .brand-title {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: 650;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -118,11 +119,12 @@
       display: grid;
       gap: 16px;
     }
-    @media (min-width: 950px) {
+    @media (min-width: 900px) {
       .layout {
-        grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.2fr);
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.25fr);
       }
     }
+
     .panel {
       background: var(--panel);
       border-radius: 10px;
@@ -147,12 +149,70 @@
       letter-spacing: 0.12em;
     }
 
+    .state-grid {
+      display: grid;
+      gap: 10px;
+    }
+    @media (min-width: 1000px) {
+      .state-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    .group-title {
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent-soft);
+      margin-bottom: 4px;
+    }
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 6px;
+    }
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 2px;
+    }
+    .slider-label span:first-child { color: var(--text-main); }
+    .slider-label span:last-child {
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .slider-row input[type="range"] { width: 100%; }
+
+    .toggle-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .toggle {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(200, 165, 255, 0.75);
+      background: radial-gradient(circle at top left, rgba(140, 94, 225, 0.7), rgba(15, 4, 32, 0.98));
+      color: var(--text-main);
+      cursor: pointer;
+      user-select: none;
+    }
+    .toggle[data-active="false"] {
+      opacity: 0.4;
+      border-style: dashed;
+      background: rgba(20, 8, 42, 0.9);
+    }
+
     .controls-row {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+      margin-top: 10px;
       align-items: center;
-      margin-bottom: 10px;
     }
     .btn {
       border-radius: 999px;
@@ -193,153 +253,32 @@
       border-color: rgba(255, 220, 180, 0.95);
       box-shadow: 0 0 18px rgba(160, 120, 230, 0.55);
     }
-
-    .knob-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
+    .status-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
     }
-    .knob {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+
+    .audio-meta {
+      margin-top: 8px;
       font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-    .knob label {
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-    }
-    .knob span {
-      font-variant-numeric: tabular-nums;
-    }
-    .knob input[type="range"] {
-      width: 120px;
-    }
-    .tempo {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-    .tempo input[type="range"] {
-      width: 140px;
-    }
-
-    /* Sequencer grid */
-    .seq-wrapper {
-      margin-top: 10px;
-    }
-    .seq-header {
-      display: grid;
-      grid-template-columns: 80px repeat(16, 1fr);
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
-      margin-bottom: 2px;
-    }
-    .seq-header div {
-      text-align: center;
-    }
-    .seq-grid {
-      border-radius: 8px;
-      border: 1px solid rgba(171, 132, 222, 0.8);
-      overflow: hidden;
-    }
-    .seq-row {
-      display: grid;
-      grid-template-columns: 80px repeat(16, 1fr);
-      border-bottom: 1px solid var(--grid-line);
-    }
-    .seq-row:last-child {
-      border-bottom: none;
-    }
-    .seq-label {
-      display: flex;
-      align-items: center;
-      padding-left: 6px;
-      font-size: 0.76rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--text-muted);
-      background: rgba(13, 7, 27, 0.98);
-    }
-    .seq-cell {
-      position: relative;
-      height: 22px;
-      border-left: 1px solid var(--grid-line);
-      background: rgba(16, 7, 35, 0.9);
-      cursor: pointer;
-      overflow: hidden;
-    }
-    .seq-cell:first-of-type {
-      border-left: none;
-    }
-    .seq-cell::before {
-      content: "";
-      position: absolute;
-      inset: 4px 4px auto 4px;
-      border-radius: 2px;
-      background: transparent;
-      transform-origin: bottom;
-      transform: scaleY(0);
-      transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
-    }
-    .seq-cell[data-level="1"]::before {
-      background: rgba(255, 207, 127, 0.65);
-      transform: scaleY(0.45);
-      box-shadow: 0 0 6px rgba(255, 207, 127, 0.9);
-    }
-    .seq-cell[data-level="2"]::before {
-      background: rgba(255, 122, 139, 0.85);
-      transform: scaleY(1);
-      box-shadow:
-        0 0 6px rgba(255, 207, 127, 1),
-        0 0 12px rgba(255, 122, 139, 0.9);
-    }
-    .seq-cell[data-active-step="true"] {
-      background: rgba(40, 18, 80, 0.95);
-    }
-
-    .seq-legend {
-      margin-top: 6px;
-      font-size: 0.74rem;
       color: var(--text-muted);
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-    }
-
-    .subtitle {
-      margin-top: 10px;
-      font-size: 0.82rem;
-      color: var(--accent-soft);
-      min-height: 1.6em;
-    }
-
-    /* Right side */
-    .meta-row {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 8px;
     }
     .meta-pill {
-      display: inline-block;
       padding: 2px 8px;
       border-radius: 999px;
       border: 1px solid rgba(205, 166, 255, 0.8);
       font-size: 0.74rem;
       text-transform: uppercase;
       letter-spacing: 0.13em;
-      margin-right: 4px;
     }
-    .nis-box {
+
+    .nis-output {
       width: 100%;
-      min-height: 220px;
-      max-height: 340px;
+      min-height: 200px;
+      max-height: 320px;
       border-radius: 8px;
       border: 1px solid rgba(171, 132, 222, 0.9);
       background: radial-gradient(circle at top, rgba(52, 22, 90, 0.9), rgba(8, 2, 20, 0.98));
@@ -350,10 +289,110 @@
       overflow-y: auto;
       white-space: pre-wrap;
     }
-    .small-note {
+
+    .audio-unlock-banner {
       margin-top: 6px;
       font-size: 0.75rem;
+      color: var(--accent-soft);
+    }
+
+    /* Pattern layer */
+    .pattern-panel {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(171,132,222,0.6);
+    }
+    .pattern-header {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
       color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .pattern-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 6px;
+      color: var(--accent-soft);
+    }
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      border-radius: 8px;
+      border: 1px solid rgba(171, 132, 222, 0.8);
+      overflow: hidden;
+    }
+    .pattern-cell {
+      position: relative;
+      height: 22px;
+      border-left: 1px solid var(--grid-line);
+      background: rgba(16, 7, 35, 0.9);
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .pattern-cell:first-child {
+      border-left: none;
+    }
+    .pattern-cell::before {
+      content: "";
+      position: absolute;
+      inset: 4px 4px auto 4px;
+      border-radius: 2px;
+      background: transparent;
+      transform-origin: bottom;
+      transform: scaleY(0);
+      transition: background 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .pattern-cell[data-level="1"]::before {
+      background: rgba(255, 207, 127, 0.7);
+      transform: scaleY(0.45);
+      box-shadow: 0 0 6px rgba(255, 207, 127, 0.9);
+    }
+    .pattern-cell[data-level="2"]::before {
+      background: rgba(255, 122, 139, 0.9);
+      transform: scaleY(1);
+      box-shadow:
+        0 0 6px rgba(255, 207, 127, 1),
+        0 0 12px rgba(255, 122, 139, 0.9);
+    }
+    .pattern-cell[data-active-step="true"] {
+      background: rgba(40, 18, 80, 0.95);
+    }
+    .pattern-legend {
+      margin-top: 5px;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+    .pattern-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .pattern-knob {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .pattern-knob label {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+    .pattern-knob span {
+      font-variant-numeric: tabular-nums;
+    }
+    .pattern-knob input[type="range"] {
+      width: 120px;
+    }
+    .pattern-subtitle {
+      margin-top: 5px;
+      font-size: 0.78rem;
+      color: var(--accent-soft);
+      min-height: 1.4em;
     }
   </style>
 </head>
@@ -363,201 +402,408 @@
       <div class="brand">
         <div class="brand-logo"></div>
         <div>
-          <div class="brand-title">NeuroG-<span>Synth ∞</span> Pattern Lab</div>
-          <div class="brand-sub">Neuro-sequencer • by caiusdesigns</div>
+          <div class="brand-title">NeuroG-<span>Synth ∞</span> V4.2</div>
+          <div class="brand-sub">State-Vector Console + Pattern Layer • by caiusdesigns</div>
         </div>
       </div>
       <div class="tag">
         <span class="tag-dot"></span>
-        <span>16-step pattern • local web audio</span>
+        <span>Local web audio • experimental</span>
       </div>
     </header>
 
     <main class="layout">
-      <!-- LEFT: SEQUENCER -->
+      <!-- LEFT: STATE VECTOR -->
       <section class="panel">
-        <div class="panel-header">Pattern engine</div>
-        <div class="panel-title">Sequenced body-state modulation</div>
+        <div class="panel-header">State vector</div>
+        <div class="panel-title">Neurotransmitters • hormones • mode</div>
 
-        <div class="controls-row">
-          <button class="btn btn-primary" id="playBtn">▶ Play pattern</button>
-          <button class="btn btn-ghost" id="stopBtn" disabled>■ Stop</button>
-          <div class="tempo">
-            <label for="tempo">Tempo (BPM)</label>
-            <input id="tempo" type="range" min="30" max="140" value="80" />
-            <span id="tempoVal">80</span>
+        <div class="state-grid">
+          <!-- NT GROUP -->
+          <div>
+            <div class="group-title">Neurotransmitters</div>
+
+            <div class="slider-row">
+              <div class="slider-label">
+                <span>Dopamine (drive / reward)</span>
+                <span id="dopamineVal">0</span>
+              </div>
+              <input id="dopamine" type="range" min="-5" max="5" step="1" value="0" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label">
+                <span>Serotonin (mood stability)</span>
+                <span id="serotoninVal">0</span>
+              </div>
+              <input id="serotonin" type="range" min="-5" max="5" step="1" value="0" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label">
+                <span>GABA (inhibition / calm)</span>
+                <span id="gabaVal">0</span>
+              </div>
+              <input id="gaba" type="range" min="-5" max="5" step="1" value="0" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label">
+                <span>Acetylcholine (precision / focus)</span>
+                <span id="achVal">0</span>
+              </div>
+              <input id="ach" type="range" min="-5" max="5" step="1" value="0" />
+            </div>
+          </div>
+
+          <!-- HORMONES / EMOTION -->
+          <div>
+            <div class="group-title">Hormones & emotional mode</div>
+
+            <div class="slider-row">
+              <div class="slider-label">
+                <span>Cortisol (stress / arousal)</span>
+                <span id="cortisolVal">0</span>
+              </div>
+              <input id="cortisol" type="range" min="-5" max="5" step="1" value="0" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label">
+                <span>Testosterone / Drive</span>
+                <span id="testVal">0</span>
+              </div>
+              <input id="test" type="range" min="-5" max="5" step="1" value="0" />
+            </div>
+
+            <div class="slider-row">
+              <div class="slider-label">
+                <span>Oxytocin / Social warmth</span>
+                <span id="oxyVal">0</span>
+              </div>
+              <input id="oxy" type="range" min="-5" max="5" step="1" value="0" />
+            </div>
+
+            <div class="group-title" style="margin-top:8px;">Target mode</div>
+            <div class="toggle-row" id="modeToggles">
+              <div class="toggle" data-key="focus" data-active="true">Focus</div>
+              <div class="toggle" data-key="calm" data-active="false">Calm</div>
+              <div class="toggle" data-key="drive" data-active="false">Drive</div>
+              <div class="toggle" data-key="grounded" data-active="false">Grounded</div>
+              <div class="toggle" data-key="euphoria" data-active="false">Euphoria</div>
+              <div class="toggle" data-key="social" data-active="false">Social</div>
+            </div>
           </div>
         </div>
 
         <div class="controls-row">
-          <div class="knob">
-            <label for="intensity">Intensity</label>
-            <input id="intensity" type="range" min="0" max="1" step="0.01" value="0.5" />
-            <span id="intensityVal">0.50</span>
-          </div>
-          <div class="knob">
-            <label for="warmth">Warmth</label>
-            <input id="warmth" type="range" min="0" max="1" step="0.01" value="0.6" />
-            <span id="warmthVal">0.60</span>
-          </div>
-          <div class="knob">
-            <label for="depth">Depth</label>
-            <input id="depth" type="range" min="0" max="1" step="0.01" value="0.6" />
-            <span id="depthVal">0.60</span>
-          </div>
+          <button class="btn btn-primary" id="compileBtn">Compile NIS</button>
+          <button class="btn btn-ghost" id="randomizeBtn">Randomize vector</button>
         </div>
-
-        <div class="controls-row">
-          <div class="knob">
-            <label for="volume">Volume</label>
-            <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" />
-            <span id="volumeVal">0.80</span>
-          </div>
-          <button class="btn btn-ghost" id="randomizeBtn">✱ Randomize pattern</button>
-          <button class="btn btn-ghost" id="clearBtn">⨂ Clear</button>
-        </div>
-
-        <div class="seq-wrapper">
-          <div class="seq-header">
-            <div>Lane</div>
-            <!-- 16 steps -->
-            <div>1</div><div>2</div><div>3</div><div>4</div>
-            <div>5</div><div>6</div><div>7</div><div>8</div>
-            <div>9</div><div>10</div><div>11</div><div>12</div>
-            <div>13</div><div>14</div><div>15</div><div>16</div>
-          </div>
-          <div class="seq-grid" id="seqGrid">
-            <!-- rows will be built by JS -->
-          </div>
-          <div class="seq-legend">
-            <span>Click cells to cycle: off → low → high.</span>
-            <span>Rows:</span>
-            <span><strong>Reward</strong> = dopamine / ACh drive</span>
-            <span><strong>Stress</strong> = cortisol vs GABA</span>
-            <span><strong>Calm</strong> = parasympathetic safety</span>
-            <span><strong>Breath</strong> = inhale / exhale / hold pattern</span>
-          </div>
-        </div>
-
-        <div class="subtitle" id="subtitle">
-          Step subtitles will appear here as the pattern runs.
+        <div class="status-text" id="vectorSummary">
+          Vector idle. Adjust sliders or randomize, then Compile.
         </div>
       </section>
 
-      <!-- RIGHT: META + NIS -->
+      <!-- RIGHT: AUDIO + NIS + PATTERN -->
       <section class="panel">
-        <div class="panel-header">Patch / protocol</div>
-        <div class="panel-title">Psychoacoustic state + textual map</div>
+        <div class="panel-header">Patch engine</div>
+        <div class="panel-title">Warm psychoacoustic patch + NIS</div>
 
-        <div class="meta-row">
+        <div class="controls-row">
+          <button class="btn btn-primary" id="playBtn">▶ Play patch</button>
+          <button class="btn btn-ghost" id="stopBtn" disabled>■ Stop</button>
+
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:0.78rem;color:var(--text-muted);">Volume</span>
+            <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" />
+          </div>
+        </div>
+
+        <div class="audio-unlock-banner" id="unlockBanner">
+          First tap on <strong>Play patch</strong> unlocks audio on mobile (iOS/Android).
+          Make sure phone is not on silent and volume is up.
+        </div>
+
+        <div class="audio-meta" id="audioMeta">
           <span class="meta-pill" id="bandMeta">Band: –</span>
           <span class="meta-pill" id="carrierMeta">Carrier: – Hz</span>
           <span class="meta-pill" id="pulseMeta">Pulse: – Hz</span>
           <span class="meta-pill" id="binauralMeta">Binaural: off</span>
         </div>
 
-        <div class="nis-box" id="nisBox">
-          Draw a pattern and press <strong>Play pattern</strong>. This box will describe the overall
-          block (Neural Instruction Sequence) in plain language.
+        <div style="margin-top:10px;font-size:0.8rem;color:var(--text-muted);">
+          Neural Instruction Sequence (NIS)
+        </div>
+        <div class="nis-output" id="nisBox">
+          Set a state vector and press <strong>Compile NIS</strong> to generate a micro-protocol.
         </div>
 
-        <div class="small-note">
-          Mobile note: first tap on <strong>Play pattern</strong> unlocks audio (iOS / Android). Make
-          sure device volume is up and not on silent.
+        <!-- PATTERN LAYER -->
+        <div class="pattern-panel">
+          <div class="pattern-header">Pattern layer (beta)</div>
+          <div class="pattern-title">Sequence the patch you just designed</div>
+
+          <div class="pattern-controls">
+            <button class="btn btn-ghost" id="patternToggleBtn" data-enabled="false">
+              ✱ Enable pattern
+            </button>
+            <div class="pattern-knob">
+              <label for="patternTempo">Tempo (BPM)</label>
+              <input id="patternTempo" type="range" min="30" max="140" value="80" />
+              <span id="patternTempoVal">80</span>
+            </div>
+            <div class="pattern-knob">
+              <label for="patternDepth">Pattern depth</label>
+              <input id="patternDepth" type="range" min="0" max="1" step="0.01" value="0.5" />
+              <span id="patternDepthVal">0.50</span>
+            </div>
+            <button class="btn btn-ghost" id="patternRandomBtn">Randomize</button>
+            <button class="btn btn-ghost" id="patternClearBtn">Clear</button>
+          </div>
+
+          <div class="pattern-grid" id="patternGrid">
+            <!-- 8 cells built by JS -->
+          </div>
+          <div class="pattern-legend">
+            Click cells to cycle: off → low → high. When pattern is enabled and audio
+            is playing, each step will gently push/pull the frequency and entrainment.
+          </div>
+          <div class="pattern-subtitle" id="patternSubtitle">
+            Pattern idle. Turn it on to add motion to your patch.
+          </div>
         </div>
       </section>
     </main>
   </div>
 
   <script>
-    // ------- PATTERN MODEL -------
-    const lanes = [
-      { key: "reward", label: "Reward", description: "dopamine / ACh drive" },
-      { key: "stress", label: "Stress", description: "cortisol vs GABA" },
-      { key: "calm", label: "Calm", description: "parasympathetic safety" },
-      { key: "breath", label: "Breath", description: "inhale / exhale / hold rhythm" }
+    // ------- STATE VECTOR / UI -------
+    const sliders = [
+      "dopamine",
+      "serotonin",
+      "gaba",
+      "ach",
+      "cortisol",
+      "test",
+      "oxy"
     ];
-    const steps = 16;
-    // pattern[level]: 0=off,1=low,2=high
-    let pattern = lanes.map(() => Array(steps).fill(0));
-
-    const seqGrid = document.getElementById("seqGrid");
-    const subtitleEl = document.getElementById("subtitle");
+    const modeTogglesEl = document.getElementById("modeToggles");
+    const vectorSummaryEl = document.getElementById("vectorSummary");
     const nisBox = document.getElementById("nisBox");
 
-    const tempoSlider = document.getElementById("tempo");
-    const tempoVal = document.getElementById("tempoVal");
-    const intensitySlider = document.getElementById("intensity");
-    const intensityVal = document.getElementById("intensityVal");
-    const warmthSlider = document.getElementById("warmth");
-    const warmthVal = document.getElementById("warmthVal");
-    const depthSlider = document.getElementById("depth");
-    const depthVal = document.getElementById("depthVal");
-    const volumeSlider = document.getElementById("volume");
-    const volumeVal = document.getElementById("volumeVal");
+    const audioMetaBand = document.getElementById("bandMeta");
+    const audioMetaCarrier = document.getElementById("carrierMeta");
+    const audioMetaPulse = document.getElementById("pulseMeta");
+    const audioMetaBinaural = document.getElementById("binauralMeta");
 
+    const compileBtn = document.getElementById("compileBtn");
+    const randomizeBtn = document.getElementById("randomizeBtn");
     const playBtn = document.getElementById("playBtn");
     const stopBtn = document.getElementById("stopBtn");
-    const randomizeBtn = document.getElementById("randomizeBtn");
-    const clearBtn = document.getElementById("clearBtn");
+    const volumeSlider = document.getElementById("volume");
+    const unlockBanner = document.getElementById("unlockBanner");
 
-    const bandMeta = document.getElementById("bandMeta");
-    const carrierMeta = document.getElementById("carrierMeta");
-    const pulseMeta = document.getElementById("pulseMeta");
-    const binauralMeta = document.getElementById("binauralMeta");
-
-    function updateKnobLabels() {
-      tempoVal.textContent = tempoSlider.value;
-      intensityVal.textContent = Number(intensitySlider.value).toFixed(2);
-      warmthVal.textContent = Number(warmthSlider.value).toFixed(2);
-      depthVal.textContent = Number(depthSlider.value).toFixed(2);
-      volumeVal.textContent = Number(volumeSlider.value).toFixed(2);
+    function getVector() {
+      const v = {};
+      sliders.forEach((id) => {
+        const el = document.getElementById(id);
+        v[id] = Number(el.value);
+      });
+      const modes = [];
+      modeTogglesEl.querySelectorAll(".toggle").forEach((el) => {
+        if (el.dataset.active === "true") modes.push(el.dataset.key);
+      });
+      return { ...v, modes };
     }
-    updateKnobLabels();
 
-    tempoSlider.addEventListener("input", updateKnobLabels);
-    intensitySlider.addEventListener("input", updateKnobLabels);
-    warmthSlider.addEventListener("input", updateKnobLabels);
-    depthSlider.addEventListener("input", updateKnobLabels);
-    volumeSlider.addEventListener("input", () => {
-      updateKnobLabels();
-      if (masterGain) masterGain.gain.value = Number(volumeSlider.value);
-    });
-
-    // Build grid
-    function buildGrid() {
-      seqGrid.innerHTML = "";
-      lanes.forEach((lane, laneIndex) => {
-        const row = document.createElement("div");
-        row.className = "seq-row";
-        const label = document.createElement("div");
-        label.className = "seq-label";
-        label.textContent = lane.label;
-        row.appendChild(label);
-
-        for (let stepIndex = 0; stepIndex < steps; stepIndex++) {
-          const cell = document.createElement("div");
-          cell.className = "seq-cell";
-          cell.dataset.lane = String(laneIndex);
-          cell.dataset.step = String(stepIndex);
-          cell.dataset.level = String(pattern[laneIndex][stepIndex]);
-          cell.addEventListener("click", () => {
-            let level = pattern[laneIndex][stepIndex];
-            level = (level + 1) % 3; // 0 -> 1 -> 2 -> 0
-            pattern[laneIndex][stepIndex] = level;
-            cell.dataset.level = String(level);
-            if (!isPlaying) {
-              describeBlockText();
-            }
-          });
-          row.appendChild(cell);
-        }
-        seqGrid.appendChild(row);
+    function updateSliderLabels() {
+      sliders.forEach((id) => {
+        const el = document.getElementById(id);
+        const label = document.getElementById(id + "Val");
+        label.textContent = el.value;
       });
     }
-    buildGrid();
+    sliders.forEach((id) => {
+      document.getElementById(id).addEventListener("input", () => {
+        updateSliderLabels();
+        describeVector();
+        if (isPlaying && currentPatch) {
+          applyLivePatchUpdate();
+        }
+      });
+    });
+    updateSliderLabels();
 
-    // ------- AUDIO ENGINE (V4.1 STYLE) -------
+    modeTogglesEl.addEventListener("click", (e) => {
+      const t = e.target;
+      if (!t.classList.contains("toggle")) return;
+      const active = t.dataset.active === "true";
+      if (active && modeTogglesEl.querySelectorAll('.toggle[data-active="true"]').length === 1) {
+        return;
+      }
+      t.dataset.active = active ? "false" : "true";
+      describeVector();
+      if (isPlaying && currentPatch) {
+        applyLivePatchUpdate();
+      }
+    });
+
+    function describeVector() {
+      const v = getVector();
+      const parts = [];
+
+      function describe(name, val) {
+        if (val === 0) return;
+        const dir = val > 0 ? "+" : "–";
+        parts.push(name + dir.repeat(Math.abs(val)));
+      }
+      describe("DA", v.dopamine);
+      describe("5-HT", v.serotonin);
+      describe("GABA", v.gaba);
+      describe("ACh", v.ach);
+      describe("CORT", v.cortisol);
+      describe("T", v.test);
+      describe("OXY", v.oxy);
+
+      const modePart = v.modes.length ? v.modes.join(" / ") : "none";
+      const txt =
+        (parts.length ? parts.join(", ") : "neutral NT/hormone") +
+        " • mode: " +
+        modePart;
+      vectorSummaryEl.textContent = txt;
+    }
+    describeVector();
+
+    randomizeBtn.addEventListener("click", () => {
+      sliders.forEach((id) => {
+        const el = document.getElementById(id);
+        const val = Math.floor(Math.random() * 11) - 5;
+        el.value = val;
+      });
+      const toggles = Array.from(
+        modeTogglesEl.querySelectorAll(".toggle")
+      );
+      toggles.forEach((t) => (t.dataset.active = "false"));
+      const count = 1 + Math.floor(Math.random() * 2);
+      for (let i = 0; i < count; i++) {
+        const t = toggles[Math.floor(Math.random() * toggles.length)];
+        t.dataset.active = "true";
+      }
+      updateSliderLabels();
+      describeVector();
+      if (isPlaying && currentPatch) applyLivePatchUpdate();
+    });
+
+    // ------- NIS COMPILER -------
+    function compileNIS() {
+      const v = getVector();
+      const modes = v.modes;
+
+      let band = "alpha";
+      let hzRange = "8–12 Hz";
+      if (modes.includes("focus") || modes.includes("drive")) {
+        band = "high beta";
+        hzRange = "18–24 Hz";
+      } else if (modes.includes("calm") || modes.includes("grounded")) {
+        band = "alpha / low beta";
+        hzRange = "8–16 Hz";
+      } else if (modes.includes("euphoria")) {
+        band = "beta / gamma edges";
+        hzRange = "18–32 Hz";
+      } else if (modes.includes("social")) {
+        band = "alpha / beta blend";
+        hzRange = "10–18 Hz";
+      }
+
+      const da = v.dopamine;
+      const cort = v.cortisol;
+      const gaba = v.gaba;
+      const ach = v.ach;
+      const oxy = v.oxy;
+
+      const block = [];
+      block.push("NEURAL INSTRUCTION SEQUENCE / NIS");
+      block.push("---------------------------------");
+      block.push(`EEG-inspired band: ${band} (${hzRange})`);
+      block.push(
+        `Vector snapshot → DA ${da}, 5-HT ${v.serotonin}, GABA ${gaba}, ACh ${ach}, CORT ${cort}, T ${v.test}, OXY ${oxy}; modes: ${modes.join(
+          " / "
+        ) || "none"}`
+      );
+      block.push("");
+
+      if (cort > 0 && gaba <= 0) {
+        block.push(
+          "Breath: extended exhale unloading (4-second inhale, 6–8-second exhale, 10-minute continuous)."
+        );
+      } else if (cort < 0 || gaba > 0 || modes.includes("calm")) {
+        block.push(
+          "Breath: low-noise nose breathing, 4-second inhale, 4-second exhale, no deliberate breath holds."
+        );
+      } else if (modes.includes("drive") || da > 1) {
+        block.push(
+          "Breath: performance block — one 'physiological sigh' every 2–3 minutes, otherwise natural nose breathing."
+        );
+      }
+
+      if (modes.includes("focus") || ach > 0) {
+        block.push(
+          "Posture: seated, spine long but not rigid, feet flat, main task slightly below eye line."
+        );
+      }
+      if (modes.includes("grounded") || gaba > 0 || oxy > 0) {
+        block.push(
+          "Grounding: keep both feet flat; every few minutes, touch a textured surface or thighs to re-anchor."
+        );
+      }
+
+      if (modes.includes("calm") || cort > 1 || gaba > 0) {
+        block.push(
+          "Environment: low visual motion, fewer screens, dimmer lighting. One warm lamp over overhead glare."
+        );
+      } else if (modes.includes("drive") || modes.includes("focus")) {
+        block.push(
+          "Environment: single-focus. One active window or object; capture other ideas on paper instead of switching."
+        );
+      }
+
+      if (modes.includes("focus")) {
+        block.push(
+          "Cognition: 50–90 minute deep-focus block. No tab-switch; track distractions but do not act on them."
+        );
+      }
+      if (modes.includes("calm") || modes.includes("grounded")) {
+        block.push(
+          "Cognition: avoid deliberate replay. Label repetitive thoughts once ('planning', 'regret') and return to sensation."
+        );
+      }
+      if (modes.includes("social") || oxy > 0) {
+        block.push(
+          "Cognition: rehearse one or two kind, concrete sentences you could say to someone you care about."
+        );
+      }
+
+      let duration = 15;
+      if (modes.includes("drive")) duration = 12;
+      if (modes.includes("calm") || modes.includes("grounded")) duration = 20;
+      block.push("");
+      block.push(`Suggested session length: ${duration} minutes.`);
+      block.push(
+        "After the block: rate the shift from 0–10 in focus, calm, drive, and social ease (whichever modes you targeted)."
+      );
+
+      nisBox.textContent = block.join("\n");
+      return { band, duration };
+    }
+
+    compileBtn.addEventListener("click", () => {
+      currentPatch = buildPatchFromVector();
+      const info = compileNIS();
+      updateAudioMeta(currentPatch, info.band);
+    });
+
+    // ------- AUDIO ENGINE -------
     let audioCtx = null;
     let masterGain = null;
     let isPlaying = false;
@@ -565,8 +811,6 @@
     let currentOscRight = null;
     let pulseGain = null;
     let pulseInterval = null;
-    let stepTimer = null;
-    let currentStep = 0;
     let currentPatch = null;
 
     function ensureAudioContext() {
@@ -583,298 +827,145 @@
       return Promise.resolve();
     }
 
-    function getStepVector(stepIndex) {
-      // Aggregate pattern levels for this step
-      const rewardLevel = pattern[0][stepIndex]; // 0-2
-      const stressLevel = pattern[1][stepIndex];
-      const calmLevel = pattern[2][stepIndex];
-      const breathLevel = pattern[3][stepIndex];
+    function buildPatchFromVector() {
+      const v = getVector();
+      const modes = v.modes;
 
-      // Map to conceptual values (-5..5 style)
-      const intensity = Number(intensitySlider.value); // 0-1
-      const depth = Number(depthSlider.value);
-      const warmth = Number(warmthSlider.value);
-
-      // reward: dopamine / ACh
-      const da = Math.round((rewardLevel - 0.5) * 6 * intensity);
-      const ach = Math.round((rewardLevel - 0.3) * 5 * intensity);
-
-      // stress vs calm → cortisol / GABA
-      const cort = Math.round((stressLevel - calmLevel) * 4 * depth);
-      const gaba = Math.round((calmLevel - stressLevel * 0.5) * 4 * depth);
-
-      // basic band selection
-      let mode = "neutral";
-      if (rewardLevel > 0 && stressLevel === 0) mode = "focus/drive";
-      if (calmLevel > 0 && stressLevel === 0) mode = "calm";
-      if (stressLevel > 0 && calmLevel === 0) mode = "stress unload";
-      if (breathLevel > 0 && calmLevel > 0) mode = "breath-calming";
-
-      return {
-        rewardLevel,
-        stressLevel,
-        calmLevel,
-        breathLevel,
-        da,
-        ach,
-        cort,
-        gaba,
-        intensity,
-        warmth,
-        depth,
-        mode
-      };
-    }
-
-    function buildPatchForStep(stepIndex) {
-      const v = getStepVector(stepIndex);
       let baseFreq = 220;
-      // reward/drive pushes up
-      if (v.rewardLevel === 1) baseFreq = 260;
-      if (v.rewardLevel === 2) baseFreq = 320;
-      // calm pulls down
-      if (v.calmLevel === 1) baseFreq -= 30;
-      if (v.calmLevel === 2) baseFreq -= 60;
-      // stress edges tone
-      if (v.stressLevel > 0) baseFreq += 20 * v.stressLevel;
+      if (modes.includes("focus") || v.ach > 0) baseFreq = 320;
+      if (modes.includes("drive") || v.dopamine > 1) baseFreq = 360;
+      if (modes.includes("calm") || v.gaba > 1 || v.cortisol < 0) baseFreq = 180;
+      if (modes.includes("grounded")) baseFreq = 160;
+      if (modes.includes("euphoria")) baseFreq = 400;
 
-      // clamp
-      baseFreq = Math.max(120, Math.min(420, baseFreq));
-
-      // entrainment band/pulse
       let pulseHz = 10;
-      let bandLabel = "alpha";
-      if (v.mode === "focus/drive") {
+      let band = "alpha";
+      if (modes.includes("focus") || modes.includes("drive")) {
         pulseHz = 18;
-        bandLabel = "high beta";
-      } else if (v.mode === "calm" || v.mode === "breath-calming") {
+        band = "high beta";
+      } else if (modes.includes("calm") || modes.includes("grounded")) {
         pulseHz = 8;
-        bandLabel = "alpha";
-      } else if (v.mode === "stress unload") {
-        pulseHz = 14;
-        bandLabel = "beta";
+        band = "alpha";
+      } else if (modes.includes("euphoria")) {
+        pulseHz = 25;
+        band = "beta / gamma";
+      } else if (modes.includes("social")) {
+        pulseHz = 12;
+        band = "alpha / beta";
       }
 
-      // binaural offset
       let binauralHz = 0;
-      if (v.calmLevel > 0) {
-        binauralHz = 4; // theta-ish
-      } else if (v.rewardLevel > 0) {
-        binauralHz = 10; // beta-ish
+      if (v.gaba > 0 || v.serotonin > 0 || modes.includes("calm")) {
+        binauralHz = 4;
+      } else if (modes.includes("focus") || modes.includes("drive")) {
+        binauralHz = 12;
       }
 
-      // warmth factor (timbre)
-      let warmth = v.warmth;
-      if (v.calmLevel > 0) warmth = Math.max(warmth, 0.6);
-      if (v.stressLevel > 0) warmth *= 0.8;
+      let warmth = 0.4;
+      if (modes.includes("calm") || modes.includes("grounded") || v.oxy > 0) {
+        warmth = 0.6;
+      }
+      if (modes.includes("euphoria")) warmth = 0.8;
 
       return {
         baseFreq,
         pulseHz,
         binauralHz,
         warmth,
-        bandLabel,
-        vec: v
+        modes
       };
     }
 
-    function updateMetaForPatch(patch) {
+    function updateAudioMeta(patch, bandLabel) {
       if (!patch) {
-        bandMeta.textContent = "Band: –";
-        carrierMeta.textContent = "Carrier: – Hz";
-        pulseMeta.textContent = "Pulse: – Hz";
-        binauralMeta.textContent = "Binaural: off";
+        audioMetaBand.textContent = "Band: –";
+        audioMetaCarrier.textContent = "Carrier: – Hz";
+        audioMetaPulse.textContent = "Pulse: – Hz";
+        audioMetaBinaural.textContent = "Binaural: off";
         return;
       }
-      bandMeta.textContent = "Band: " + patch.bandLabel;
-      carrierMeta.textContent = "Carrier: " + patch.baseFreq.toFixed(0) + " Hz";
-      pulseMeta.textContent = "Pulse: " + patch.pulseHz.toFixed(1) + " Hz";
-      binauralMeta.textContent =
+      audioMetaBand.textContent =
+        "Band: " + (bandLabel || "EEG-ish " + patch.pulseHz + " Hz");
+      audioMetaCarrier.textContent =
+        "Carrier: " + patch.baseFreq.toFixed(0) + " Hz";
+      audioMetaPulse.textContent = "Pulse: " + patch.pulseHz.toFixed(1) + " Hz";
+      audioMetaBinaural.textContent =
         "Binaural: " + (patch.binauralHz ? patch.binauralHz + " Hz" : "off");
     }
 
-    function describeStepSubtitle(stepIndex, patch) {
-      const v = patch.vec;
-      const n = stepIndex + 1;
-      let parts = [`Step ${n}: `];
-
-      if (v.rewardLevel > 0) {
-        parts.push(
-          v.rewardLevel === 1 ? "gentle drive" : "strong drive"
-        );
-      }
-      if (v.calmLevel > 0) {
-        parts.push(
-          v.calmLevel === 1 ? "soft calm" : "deep parasympathetic drop"
-        );
-      }
-      if (v.stressLevel > 0) {
-        parts.push(
-          v.stressLevel === 1 ? "stress edge" : "strong stress unload cue"
-        );
-      }
-      if (v.breathLevel > 0) {
-        if (v.breathLevel === 1) parts.push("normal inhale / exhale");
-        if (v.breathLevel === 2) parts.push("extend exhale on this step");
-      }
-
-      if (parts.length === 1) {
-        parts.push("neutral bridge / coast.");
-      } else {
-        parts.push(".");
-      }
-
-      subtitleEl.textContent = parts.join(" ");
-    }
-
-    function describeBlockText() {
-      // simple summary of pattern overall
-      let rewardSum = 0,
-        stressSum = 0,
-        calmSum = 0,
-        breathSum = 0;
-      for (let i = 0; i < steps; i++) {
-        rewardSum += pattern[0][i];
-        stressSum += pattern[1][i];
-        calmSum += pattern[2][i];
-        breathSum += pattern[3][i];
-      }
-      const totalActive =
-        rewardSum + stressSum + calmSum + breathSum;
-
-      const lines = [];
-      lines.push("NEUROG-SYNTH ∞ PATTERN LAB – BLOCK DESCRIPTION");
-      lines.push("----------------------------------------------");
-      lines.push(`Pattern length: ${steps} steps, tempo ${tempoSlider.value} BPM.`);
-      lines.push(
-        `Global knobs → Intensity ${Number(intensitySlider.value).toFixed(
-          2
-        )}, Warmth ${Number(warmthSlider.value).toFixed(
-          2
-        )}, Depth ${Number(depthSlider.value).toFixed(2)}.`
-      );
-      lines.push("");
-      lines.push(
-        `Reward lane (DA/ACh): ${rewardSum} total activation points across the loop.`
-      );
-      lines.push(
-        `Stress lane (cortisol vs GABA): ${stressSum} points (more = more edges to unload).`
-      );
-      lines.push(
-        `Calm lane (parasympathetic safety): ${calmSum} points (more = more alpha / theta drift).`
-      );
-      lines.push(
-        `Breath lane: ${breathSum} marked steps (exhale / hold emphasis).`
-      );
-      lines.push("");
-      if (totalActive === 0) {
-        lines.push(
-          "This pattern is currently neutral. Light some cells in Reward / Calm / Breath to create a body-state script."
-        );
-      } else {
-        lines.push(
-          "Interpretation: this block will cycle a repeating script of reward drive, stress edges, and calm steps, guided by your pattern."
-        );
-        lines.push(
-          "Headphones, comfortable posture, eyes-open or soft-focus. Let the subtitles guide tiny breath / body adjustments as each step lights."
-        );
-      }
-      nisBox.textContent = lines.join("\n");
-    }
-    describeBlockText();
-
-    function clearPattern() {
-      pattern = lanes.map(() => Array(steps).fill(0));
-      buildGrid();
-      describeBlockText();
-    }
-
-    function randomizePattern() {
-      pattern = lanes.map((lane, li) =>
-        Array(steps)
-          .fill(0)
-          .map((_, si) => {
-            // reward + calm denser, stress sparser
-            const r = Math.random();
-            if (li === 0) { // reward
-              if (r < 0.35) return 1;
-              if (r < 0.55) return 2;
-              return 0;
-            }
-            if (li === 2) { // calm
-              if (r < 0.4) return 1;
-              if (r < 0.6) return 2;
-              return 0;
-            }
-            if (li === 1) { // stress
-              if (r < 0.18) return 1;
-              if (r < 0.26) return 2;
-              return 0;
-            }
-            // breath: pattern-y
-            if (li === 3) {
-              if (si % 4 === 3) return 2; // exhale step
-              if (si % 4 === 0 && r < 0.5) return 1; // inhale emphasis
-              return 0;
-            }
-            return 0;
-          })
-      );
-      buildGrid();
-      describeBlockText();
-    }
-
-    clearBtn.addEventListener("click", () => {
-      clearPattern();
-    });
-    randomizeBtn.addEventListener("click", () => {
-      randomizePattern();
-    });
-
-    function setActiveStepHighlight(stepIndex) {
-      const cells = seqGrid.querySelectorAll(".seq-cell");
-      cells.forEach((cell) => {
-        if (Number(cell.dataset.step) === stepIndex) {
-          cell.dataset.activeStep = "true";
-        } else {
-          cell.dataset.activeStep = "false";
-        }
-      });
-    }
-
-    function startPattern() {
+    function startPatch() {
+      if (!currentPatch) currentPatch = buildPatchFromVector();
       ensureAudioContext()
         .then(() => {
-          stopPattern(); // reset
+          unlockBanner.textContent =
+            "Audio unlocked. You can adjust vector and pattern live while it plays.";
+
+          stopPatch();
+          const patch = currentPatch;
+
+          const leftOsc = audioCtx.createOscillator();
+          const rightOsc = audioCtx.createOscillator();
+          const leftGain = audioCtx.createGain();
+          const rightGain = audioCtx.createGain();
+          pulseGain = audioCtx.createGain();
+
+          const base = patch.baseFreq;
+          const spread = base * patch.warmth * 0.2;
+          leftOsc.frequency.value = base - spread;
+          rightOsc.frequency.value = base + spread + patch.binauralHz;
+
+          leftOsc.type = "sine";
+          rightOsc.type = patch.warmth > 0.6 ? "triangle" : "sine";
+
+          leftGain.gain.value = 0.55;
+          rightGain.gain.value = 0.55;
+
+          leftOsc.connect(leftGain);
+          rightOsc.connect(rightGain);
+          const merger = audioCtx.createChannelMerger(2);
+          leftGain.connect(merger, 0, 0);
+          rightGain.connect(merger, 0, 1);
+
+          merger.connect(pulseGain);
+          pulseGain.connect(masterGain);
+
+          const pulseHz = patch.pulseHz;
+          const pulsePeriod = 1 / pulseHz;
+          const depth = 0.65;
+          pulseGain.gain.value = 1 - depth / 2;
+
+          const schedulePulse = () => {
+            const now = audioCtx.currentTime;
+            pulseGain.gain.cancelScheduledValues(now);
+            for (let i = 0; i < 4; i++) {
+              const t0 = now + i * pulsePeriod;
+              const t1 = t0 + pulsePeriod / 2;
+              pulseGain.gain.setValueAtTime(1, t0);
+              pulseGain.gain.linearRampToValueAtTime(1 - depth, t1);
+            }
+          };
+          schedulePulse();
+          pulseInterval = setInterval(schedulePulse, 4000);
+
+          leftOsc.start();
+          rightOsc.start();
+
+          currentOscLeft = leftOsc;
+          currentOscRight = rightOsc;
           isPlaying = true;
-          playBtn.textContent = "⏸ Pause";
+          playBtn.textContent = "⏸ Pause patch";
           stopBtn.disabled = false;
-
-          const bpm = Number(tempoSlider.value);
-          const stepDuration = 60 / bpm / 2; // 8th-note-ish, tweakable
-          currentStep = 0;
-
-          // start patch for first step
-          applyPatchForStep(currentStep);
-
-          stepTimer = setInterval(() => {
-            if (!isPlaying) return;
-            currentStep = (currentStep + 1) % steps;
-            applyPatchForStep(currentStep);
-          }, stepDuration * 1000);
+          updateAudioMeta(patch);
+          startPatternLoopIfNeeded();
         })
         .catch((err) => {
-          console.error("audio error:", err);
-          subtitleEl.textContent =
-            "Audio blocked by browser. Reload page, tap Play again with sound on.";
+          console.error("Audio unlock error:", err);
+          unlockBanner.textContent =
+            "Audio blocked by browser. Try reloading and tapping Play again, with sound on.";
         });
     }
 
-    function stopPattern() {
-      if (stepTimer) {
-        clearInterval(stepTimer);
-        stepTimer = null;
-      }
+    function stopPatch() {
       if (pulseInterval) {
         clearInterval(pulseInterval);
         pulseInterval = null;
@@ -889,98 +980,229 @@
         currentOscRight.disconnect();
         currentOscRight = null;
       }
+      stopPatternLoop();
       isPlaying = false;
-      playBtn.textContent = "▶ Play pattern";
+      playBtn.textContent = "▶ Play patch";
       stopBtn.disabled = true;
-      setActiveStepHighlight(-1);
     }
 
-    function applyPatchForStep(stepIndex) {
-      const patch = (currentPatch = buildPatchForStep(stepIndex));
-      updateMetaForPatch(patch);
-      describeStepSubtitle(stepIndex, patch);
-      describeBlockText();
-      setActiveStepHighlight(stepIndex);
-
-      ensureAudioContext().then(() => {
-        // rebuild oscillators for each step for clarity
-        if (currentOscLeft) {
-          try { currentOscLeft.stop(); } catch (e) {}
-          currentOscLeft.disconnect();
-        }
-        if (currentOscRight) {
-          try { currentOscRight.stop(); } catch (e) {}
-          currentOscRight.disconnect();
-        }
-        if (pulseInterval) {
-          clearInterval(pulseInterval);
-          pulseInterval = null;
-        }
-
-        const leftOsc = audioCtx.createOscillator();
-        const rightOsc = audioCtx.createOscillator();
-        const leftGain = audioCtx.createGain();
-        const rightGain = audioCtx.createGain();
-        pulseGain = audioCtx.createGain();
-
-        const base = patch.baseFreq;
-        const spread = base * patch.warmth * 0.2;
-
-        leftOsc.frequency.value = base - spread;
-        rightOsc.frequency.value = base + spread + patch.binauralHz;
-
-        leftOsc.type = "sine";
-        rightOsc.type = patch.warmth > 0.6 ? "triangle" : "sine";
-
-        leftGain.gain.value = 0.55;
-        rightGain.gain.value = 0.55;
-
-        leftOsc.connect(leftGain);
-        rightOsc.connect(rightGain);
-        const merger = audioCtx.createChannelMerger(2);
-        leftGain.connect(merger, 0, 0);
-        rightGain.connect(merger, 0, 1);
-
-        merger.connect(pulseGain);
-        pulseGain.connect(masterGain);
-
-        const pulseHz = patch.pulseHz;
-        const pulsePeriod = 1 / pulseHz;
-        const depth = 0.6 * patch.vec.depth;
-
-        pulseGain.gain.value = 1 - depth / 2;
-
-        const schedulePulse = () => {
-          const now = audioCtx.currentTime;
-          pulseGain.gain.cancelScheduledValues(now);
-          for (let i = 0; i < 4; i++) {
-            const t0 = now + i * pulsePeriod;
-            const t1 = t0 + pulsePeriod / 2;
-            pulseGain.gain.setValueAtTime(1, t0);
-            pulseGain.gain.linearRampToValueAtTime(1 - depth, t1);
-          }
-        };
-        schedulePulse();
-        pulseInterval = setInterval(schedulePulse, 4000);
-
-        leftOsc.start();
-        rightOsc.start();
-
-        currentOscLeft = leftOsc;
-        currentOscRight = rightOsc;
-      });
+    function applyLivePatchUpdate() {
+      if (!audioCtx || !isPlaying || !currentOscLeft || !currentOscRight)
+        return;
+      const patch = (currentPatch = buildPatchFromVector());
+      const base = patch.baseFreq;
+      const spread = base * patch.warmth * 0.2;
+      currentOscLeft.frequency.setTargetAtTime(
+        base - spread,
+        audioCtx.currentTime,
+        0.1
+      );
+      currentOscRight.frequency.setTargetAtTime(
+        base + spread + patch.binauralHz,
+        audioCtx.currentTime,
+        0.1
+      );
+      updateAudioMeta(patch);
     }
 
     playBtn.addEventListener("click", () => {
       if (!isPlaying) {
-        startPattern();
+        startPatch();
       } else {
-        // pause = stop audio but keep pattern on screen
-        stopPattern();
+        stopPatch();
       }
     });
+
     stopBtn.addEventListener("click", () => {
-      stopPattern();
+      stopPatch();
+    });
+
+    volumeSlider.addEventListener("input", () => {
+      if (masterGain) {
+        masterGain.gain.value = Number(volumeSlider.value);
+      }
+    });
+
+    currentPatch = buildPatchFromVector();
+    updateAudioMeta(currentPatch, null);
+
+    // ------- PATTERN LAYER -------
+    const patternGrid = document.getElementById("patternGrid");
+    const patternSubtitle = document.getElementById("patternSubtitle");
+    const patternToggleBtn = document.getElementById("patternToggleBtn");
+    const patternTempoSlider = document.getElementById("patternTempo");
+    const patternTempoVal = document.getElementById("patternTempoVal");
+    const patternDepthSlider = document.getElementById("patternDepth");
+    const patternDepthVal = document.getElementById("patternDepthVal");
+    const patternRandomBtn = document.getElementById("patternRandomBtn");
+    const patternClearBtn = document.getElementById("patternClearBtn");
+
+    const PATTERN_STEPS = 8;
+    let pattern = Array(PATTERN_STEPS).fill(0); // 0=off,1=low,2=high
+    let patternEnabled = false;
+    let patternTimer = null;
+    let patternStep = 0;
+
+    function buildPatternGrid() {
+      patternGrid.innerHTML = "";
+      for (let i = 0; i < PATTERN_STEPS; i++) {
+        const cell = document.createElement("div");
+        cell.className = "pattern-cell";
+        cell.dataset.step = String(i);
+        cell.dataset.level = String(pattern[i]);
+        cell.addEventListener("click", () => {
+          let level = pattern[i];
+          level = (level + 1) % 3;
+          pattern[i] = level;
+          cell.dataset.level = String(level);
+          updatePatternSubtitleIdle();
+        });
+        patternGrid.appendChild(cell);
+      }
+    }
+    buildPatternGrid();
+
+    function updatePatternTempoLabel() {
+      patternTempoVal.textContent = patternTempoSlider.value;
+    }
+    function updatePatternDepthLabel() {
+      patternDepthVal.textContent = Number(patternDepthSlider.value).toFixed(2);
+    }
+    updatePatternTempoLabel();
+    updatePatternDepthLabel();
+
+    patternTempoSlider.addEventListener("input", () => {
+      updatePatternTempoLabel();
+      if (patternTimer) {
+        startPatternLoopIfNeeded(); // restart with new tempo
+      }
+    });
+    patternDepthSlider.addEventListener("input", () => {
+      updatePatternDepthLabel();
+    });
+
+    function setPatternActiveStepHighlight(stepIndex) {
+      const cells = patternGrid.querySelectorAll(".pattern-cell");
+      cells.forEach((cell) => {
+        if (Number(cell.dataset.step) === stepIndex) {
+          cell.dataset.activeStep = "true";
+        } else {
+          cell.dataset.activeStep = "false";
+        }
+      });
+    }
+
+    function updatePatternSubtitleIdle() {
+      const active = pattern.reduce((a, v) => a + v, 0);
+      if (!patternEnabled) {
+        patternSubtitle.textContent =
+          active === 0
+            ? "Pattern idle. Draw a shape, then enable it while audio is playing."
+            : "Pattern drawn but disabled. Toggle it on to hear motion.";
+      } else {
+        if (active === 0) {
+          patternSubtitle.textContent =
+            "Pattern enabled but empty. Light some steps to hear movement.";
+        }
+      }
+    }
+    updatePatternSubtitleIdle();
+
+    function patternStepDescription(step, level) {
+      if (level === 0) return `Step ${step + 1}: neutral / bridge.`;
+      if (level === 1)
+        return `Step ${step + 1}: gentle push in your current mode (small tilt of freq + pulse).`;
+      return `Step ${step + 1}: strong push — deeper into your current mode for this moment.`;
+    }
+
+    function applyPatternModulation(stepIndex) {
+      if (!audioCtx || !isPlaying || !currentOscLeft || !currentOscRight) return;
+      const level = pattern[stepIndex];
+      const depth = Number(patternDepthSlider.value);
+      const patch = currentPatch || buildPatchFromVector();
+      const base = patch.baseFreq;
+      const spread = base * patch.warmth * 0.2;
+
+      const factor = 1 + (level * 0.06 * depth); // small expansion
+
+      const leftTarget = (base - spread) * factor;
+      const rightTarget = (base + spread + patch.binauralHz) * factor;
+
+      currentOscLeft.frequency.setTargetAtTime(
+        leftTarget,
+        audioCtx.currentTime,
+        0.08
+      );
+      currentOscRight.frequency.setTargetAtTime(
+        rightTarget,
+        audioCtx.currentTime,
+        0.08
+      );
+
+      setPatternActiveStepHighlight(stepIndex);
+      patternSubtitle.textContent = patternStepDescription(stepIndex, level);
+    }
+
+    function startPatternLoopIfNeeded() {
+      stopPatternLoop();
+      if (!patternEnabled || !isPlaying) {
+        setPatternActiveStepHighlight(-1);
+        updatePatternSubtitleIdle();
+        return;
+      }
+      const bpm = Number(patternTempoSlider.value);
+      const stepDuration = 60 / bpm; // one beat per step
+
+      patternStep = 0;
+      applyPatternModulation(patternStep);
+
+      patternTimer = setInterval(() => {
+        if (!isPlaying || !patternEnabled) {
+          stopPatternLoop();
+          return;
+        }
+        patternStep = (patternStep + 1) % PATTERN_STEPS;
+        applyPatternModulation(patternStep);
+      }, stepDuration * 1000);
+    }
+
+    function stopPatternLoop() {
+      if (patternTimer) {
+        clearInterval(patternTimer);
+        patternTimer = null;
+      }
+      setPatternActiveStepHighlight(-1);
+    }
+
+    patternToggleBtn.addEventListener("click", () => {
+      patternEnabled = !patternEnabled;
+      patternToggleBtn.dataset.enabled = patternEnabled ? "true" : "false";
+      patternToggleBtn.textContent = patternEnabled
+        ? "✱ Pattern ON"
+        : "✱ Enable pattern";
+      if (patternEnabled && isPlaying) {
+        startPatternLoopIfNeeded();
+      } else {
+        stopPatternLoop();
+      }
+      updatePatternSubtitleIdle();
+    });
+
+    patternRandomBtn.addEventListener("click", () => {
+      pattern = pattern.map(() => {
+        const r = Math.random();
+        if (r < 0.5) return 0;
+        if (r < 0.8) return 1;
+        return 2;
+      });
+      buildPatternGrid();
+      updatePatternSubtitleIdle();
+    });
+
+    patternClearBtn.addEventListener("click", () => {
+      pattern = Array(PATTERN_STEPS).fill(0);
+      buildPatternGrid();
+      updatePatternSubtitleIdle();
     });
   </script>
 </body>

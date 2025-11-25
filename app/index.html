@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>NeuroG-Synth ∞ V4.2 – by caiusdesigns</title>
+  <title>NeuroG-Synth ∞ V4.3 – by caiusdesigns</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
@@ -121,7 +121,10 @@
     }
     @media (min-width: 900px) {
       .layout {
-        grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.25fr);
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+      .world-panel {
+        grid-column: 1 / -1; /* span full width */
       }
     }
 
@@ -394,6 +397,27 @@
       color: var(--accent-soft);
       min-height: 1.4em;
     }
+
+    /* Neuro world viewport */
+    .world-wrapper {
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid rgba(171, 132, 222, 0.8);
+      background: radial-gradient(circle at top, #0b0614 0, #020107 50%, #000 100%);
+      overflow: hidden;
+      position: relative;
+    }
+    #worldCanvas {
+      display: block;
+      width: 100%;
+      height: 220px;
+      image-rendering: pixelated;
+    }
+    .world-legend {
+      margin-top: 6px;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
   </style>
 </head>
 <body>
@@ -402,8 +426,8 @@
       <div class="brand">
         <div class="brand-logo"></div>
         <div>
-          <div class="brand-title">NeuroG-<span>Synth ∞</span> V4.2</div>
-          <div class="brand-sub">State-Vector Console + Pattern Layer • by caiusdesigns</div>
+          <div class="brand-title">NeuroG-<span>Synth ∞</span> V4.3</div>
+          <div class="brand-sub">State-Vector Console • Neuro World • Pattern Layer</div>
         </div>
       </div>
       <div class="tag">
@@ -502,6 +526,20 @@
         </div>
         <div class="status-text" id="vectorSummary">
           Vector idle. Adjust sliders or randomize, then Compile.
+        </div>
+      </section>
+
+      <!-- MIDDLE: NEURO WORLD -->
+      <section class="panel world-panel">
+        <div class="panel-header">Neuro world</div>
+        <div class="panel-title">Frequency landscape visualizer</div>
+        <div class="world-wrapper">
+          <canvas id="worldCanvas"></canvas>
+        </div>
+        <div class="world-legend">
+          Each neurotransmitter / hormone paints a living object here. This is a low-res sci-fi
+          landscape of your current state vector — dopamine orbs, serotonin flowers, GABA clouds,
+          cortisol spikes, testosterone monoliths, and oxytocin clusters, all tied to the sound.
         </div>
       </section>
 
@@ -1204,6 +1242,273 @@
       buildPatternGrid();
       updatePatternSubtitleIdle();
     });
+
+    // ------- NEURO WORLD VISUALIZER -------
+    const worldCanvas = document.getElementById("worldCanvas");
+    const worldCtx = worldCanvas ? worldCanvas.getContext("2d") : null;
+    let worldEntities = [];
+    let worldTime = 0;
+
+    function resizeWorldCanvas() {
+      if (!worldCanvas) return;
+      const rect = worldCanvas.getBoundingClientRect();
+      const scale = 0.5; // low-res internal buffer
+      worldCanvas.width = Math.max(320, Math.floor(rect.width * scale));
+      worldCanvas.height = 180;
+    }
+
+    function createOrUpdateEntity(type, intensity) {
+      const abs = Math.min(5, Math.max(0, Math.abs(intensity)));
+      if (abs === 0) {
+        worldEntities = worldEntities.filter((e) => e.type !== type);
+        return;
+      }
+      let e = worldEntities.find((x) => x.type === type);
+      if (!e) {
+        e = {
+          type,
+          amp: abs,
+          phase: Math.random() * Math.PI * 2,
+          seed: Math.random(),
+        };
+        worldEntities.push(e);
+      } else {
+        e.amp = abs;
+      }
+    }
+
+    function updateWorldFromVector() {
+      if (!worldCtx) return;
+      const v = getVector();
+
+      createOrUpdateEntity("dopamine_orbs", v.dopamine);
+      createOrUpdateEntity("serotonin_flowers", v.serotonin);
+      createOrUpdateEntity("gaba_clouds", v.gaba);
+      createOrUpdateEntity("cort_spikes", v.cortisol);
+      createOrUpdateEntity("test_monoliths", v.test);
+      createOrUpdateEntity("oxy_clusters", v.oxy);
+    }
+
+    function drawBackground(v) {
+      const w = worldCanvas.width;
+      const h = worldCanvas.height;
+
+      const g = worldCtx.createLinearGradient(0, 0, 0, h);
+      const vOxy = v.oxy || 0;
+      const isCalm =
+        v.modes.includes("calm") || v.modes.includes("grounded");
+
+      const topColor = isCalm
+        ? "#1b1230"
+        : vOxy > 0
+        ? "#2b1630"
+        : "#0b0614";
+      const midColor = "#06020c";
+      const bottomColor = "#000000";
+
+      g.addColorStop(0, topColor);
+      g.addColorStop(0.5, midColor);
+      g.addColorStop(1, bottomColor);
+
+      worldCtx.fillStyle = g;
+      worldCtx.fillRect(0, 0, w, h);
+
+      worldCtx.fillStyle = "rgba(10,6,20,0.9)";
+      worldCtx.fillRect(0, h * 0.6, w, h * 0.4);
+    }
+
+    function drawDopamineOrbs(e, v) {
+      const w = worldCanvas.width;
+      const h = worldCanvas.height;
+      const count = 2 + e.amp;
+      for (let i = 0; i < count; i++) {
+        const t = worldTime * 0.002 + e.seed * 10 + i;
+        const x = (w * (i + 1)) / (count + 1);
+        const y = h * 0.28 + Math.sin(t) * 8;
+        const r = 4 + e.amp * 1.3;
+
+        const glow = worldCtx.createRadialGradient(x, y, 0, x, y, r * 3);
+        glow.addColorStop(0, "rgba(255,210,120,0.9)");
+        glow.addColorStop(0.4, "rgba(255,150,120,0.7)");
+        glow.addColorStop(1, "rgba(0,0,0,0)");
+        worldCtx.fillStyle = glow;
+        worldCtx.beginPath();
+        worldCtx.arc(x, y, r * 3, 0, Math.PI * 2);
+        worldCtx.fill();
+
+        worldCtx.fillStyle = "rgba(255,240,210,0.9)";
+        worldCtx.beginPath();
+        worldCtx.arc(x, y, r, 0, Math.PI * 2);
+        worldCtx.fill();
+      }
+    }
+
+    function drawSerotoninFlowers(e, v) {
+      const w = worldCanvas.width;
+      const h = worldCanvas.height;
+      const count = 3 + e.amp;
+      for (let i = 0; i < count; i++) {
+        const t = worldTime * 0.0015 + e.seed * 20 + i;
+        const x = (w * (i + 0.5)) / count;
+        const baseY = h * 0.62;
+        const stemH = 8 + e.amp * 4;
+        const pulse = 0.4 + 0.4 * Math.sin(t);
+
+        worldCtx.strokeStyle = "rgba(120,180,255,0.4)";
+        worldCtx.lineWidth = 1;
+        worldCtx.beginPath();
+        worldCtx.moveTo(x, baseY);
+        worldCtx.lineTo(x, baseY - stemH);
+        worldCtx.stroke();
+
+        const r = 3 + e.amp * 0.4 * (1 + pulse);
+        worldCtx.fillStyle = "rgba(180,210,255,0.8)";
+        worldCtx.beginPath();
+        worldCtx.arc(x, baseY - stemH - 2, r, 0, Math.PI * 2);
+        worldCtx.fill();
+      }
+    }
+
+    function drawGabaClouds(e, v) {
+      const w = worldCanvas.width;
+      const h = worldCanvas.height;
+      const count = 2 + Math.ceil(e.amp / 2);
+      for (let i = 0; i < count; i++) {
+        const t = worldTime * 0.0008 + e.seed * 30 + i;
+        const x = ((w + 60) * (i / count + 0.2 + 0.1 * Math.sin(t))) % (w + 60) - 30;
+        const y = h * 0.32 + Math.sin(t * 0.6) * 6;
+        const r = 10 + e.amp * 3;
+
+        const grd = worldCtx.createRadialGradient(x, y, 0, x, y, r);
+        grd.addColorStop(0, "rgba(200,220,255,0.42)");
+        grd.addColorStop(1, "rgba(0,0,0,0)");
+        worldCtx.fillStyle = grd;
+        worldCtx.beginPath();
+        worldCtx.arc(x, y, r, 0, Math.PI * 2);
+        worldCtx.fill();
+      }
+    }
+
+    function drawCortSpikes(e, v) {
+      const w = worldCanvas.width;
+      const h = worldCanvas.height;
+      const count = 3 + e.amp;
+      worldCtx.strokeStyle = "rgba(255,90,120,0.65)";
+      worldCtx.lineWidth = 1;
+      for (let i = 0; i < count; i++) {
+        const t = worldTime * 0.002 + e.seed * 40 + i;
+        const x = (w * (i + 0.5)) / count;
+        const baseY = h * 0.6;
+        const spikeH = 10 + e.amp * 6 * (1 + 0.3 * Math.sin(t * 3));
+        worldCtx.beginPath();
+        worldCtx.moveTo(x, baseY);
+        worldCtx.lineTo(x + 3, baseY - spikeH * 0.7);
+        worldCtx.lineTo(x - 3, baseY - spikeH);
+        worldCtx.stroke();
+      }
+    }
+
+    function drawTestMonoliths(e, v) {
+      const w = worldCanvas.width;
+      const h = worldCanvas.height;
+      const count = 1 + Math.ceil(e.amp / 2);
+      for (let i = 0; i < count; i++) {
+        const t = worldTime * 0.001 + e.seed * 15 + i;
+        const x = (w * (i + 1)) / (count + 1);
+        const baseY = h * 0.6;
+        const width = 10 + e.amp * 2;
+        const height = 20 + e.amp * 6;
+        const pulse = 0.3 + 0.3 * Math.sin(t * 2);
+
+        worldCtx.fillStyle = "rgba(90,60,180,0.95)";
+        worldCtx.fillRect(
+          x - width / 2,
+          baseY - height,
+          width,
+          height
+        );
+
+        worldCtx.strokeStyle = "rgba(255,210,140," + (0.2 + pulse * 0.2) + ")";
+        worldCtx.lineWidth = 1;
+        worldCtx.strokeRect(
+          x - width / 2 - 1,
+          baseY - height - 1,
+          width + 2,
+          height + 2
+        );
+      }
+    }
+
+    function drawOxyClusters(e, v) {
+      const w = worldCanvas.width;
+      const h = worldCanvas.height;
+      const count = 6 + e.amp * 2;
+      for (let i = 0; i < count; i++) {
+        const t = worldTime * 0.0012 + e.seed * 50 + i;
+        const clusterX = w * 0.5 + 30 * Math.sin(e.seed * 10 + t * 0.4);
+        const clusterY = h * 0.4 + 10 * Math.cos(e.seed * 7 + t * 0.5);
+        const angle = (Math.PI * 2 * i) / count;
+        const r = 10 + 4 * Math.sin(t + angle);
+        const x = clusterX + r * Math.cos(angle);
+        const y = clusterY + r * Math.sin(angle);
+        const dotR = 1.5 + e.amp * 0.3;
+
+        worldCtx.fillStyle = "rgba(255,180,200,0.9)";
+        worldCtx.beginPath();
+        worldCtx.arc(x, y, dotR, 0, Math.PI * 2);
+        worldCtx.fill();
+      }
+    }
+
+    function drawWorld() {
+      if (!worldCtx || !worldCanvas) return;
+      worldTime += 16;
+      const v = getVector();
+      resizeWorldCanvas();
+      worldCtx.save();
+      worldCtx.clearRect(0, 0, worldCanvas.width, worldCanvas.height);
+      drawBackground(v);
+
+      worldEntities.forEach((e) => {
+        switch (e.type) {
+          case "dopamine_orbs":
+            drawDopamineOrbs(e, v);
+            break;
+          case "serotonin_flowers":
+            drawSerotoninFlowers(e, v);
+            break;
+          case "gaba_clouds":
+            drawGabaClouds(e, v);
+            break;
+          case "cort_spikes":
+            drawCortSpikes(e, v);
+            break;
+          case "test_monoliths":
+            drawTestMonoliths(e, v);
+            break;
+          case "oxy_clusters":
+            drawOxyClusters(e, v);
+            break;
+        }
+      });
+
+      worldCtx.restore();
+      requestAnimationFrame(drawWorld);
+    }
+
+    if (worldCanvas && worldCtx) {
+      resizeWorldCanvas();
+      updateWorldFromVector();
+      requestAnimationFrame(drawWorld);
+      window.addEventListener("resize", resizeWorldCanvas);
+    }
+
+    // extend describeVector to also update world entities
+    const _oldDescribeVector = describeVector;
+    describeVector = function() {
+      _oldDescribeVector();
+      updateWorldFromVector();
+    };
   </script>
 </body>
 </html>

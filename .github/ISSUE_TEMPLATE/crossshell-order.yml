@@ -1,0 +1,46 @@
+name: CrossShell conversion scope
+description: Ask whether one public Bash script fits the fixed-price PowerShell conversion scope.
+title: "[CrossShell] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue is public. Do not include credentials, tokens, private keys, personal data, private code, internal hostnames, or payment identifiers. No paid work begins until checkout is available and payment is settled.
+  - type: input
+    id: script_url
+    attributes:
+      label: Public script URL
+      description: Link to a public gist or repository file that you own or have permission to share.
+      placeholder: https://github.com/owner/repository/blob/main/script.sh
+    validations:
+      required: true
+  - type: dropdown
+    id: powershell
+    attributes:
+      label: Target PowerShell
+      options:
+        - PowerShell 7 on Windows
+        - Windows PowerShell 5.1
+        - Unsure
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Required behavior
+      description: What inputs, outputs, side effects, exit behavior, and third-party commands must the port preserve?
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Safety confirmations
+      options:
+        - label: I own this code or have permission to request the conversion.
+          required: true
+        - label: The linked material contains no credentials, secrets, personal data, or private business information.
+          required: true
+        - label: The request is not for malware, credential theft, evasion, persistence, destructive behavior, or unauthorized access.
+          required: true
+

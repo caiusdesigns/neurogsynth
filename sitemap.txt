@@ -1,2 +1,3 @@
 https://www.neurogsynth.com/
 https://www.neurogsynth.com/crossshell/
+https://www.neurogsynth.com/crossshell/bash-to-powershell-guide/

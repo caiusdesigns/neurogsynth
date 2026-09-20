@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>How to convert a Bash script to PowerShell 7 safely</title>
+  <meta name="description" content="A practical Bash-to-PowerShell conversion guide covering strict mode, arguments, paths, pipelines, exit codes, Unix tools, traps, permissions, and testing.">
+  <link rel="canonical" href="https://www.neurogsynth.com/crossshell/bash-to-powershell-guide/">
+  <link rel="stylesheet" href="/crossshell/style.css">
+</head>
+<body>
+  <header><a class="brand" href="/crossshell/">neurogsynth / CrossShell</a></header>
+  <main>
+    <p class="eyebrow">Practical conversion guide</p>
+    <h1>How to convert a Bash script to PowerShell without changing what it does</h1>
+    <p class="lead">A reliable port preserves inputs, outputs, side effects, failures, and operational assumptions. It does not merely replace command names.</p>
+
+    <h2>Start with a behavior contract</h2>
+    <p>Before editing code, write down how the Bash script is invoked, which environment variables it reads, which files and services it changes, what it writes to standard output and standard error, and which exit codes callers rely on. Record the supported operating systems and every external executable. That short contract is the test oracle for the PowerShell version.</p>
+    <p>Run the original only in a safe fixture environment. Capture normal input, empty input, missing files, permission failures, spaces and Unicode in paths, interrupted operations, and repeated runs. If you cannot state the expected behavior, a syntactically valid conversion can still be dangerously wrong.</p>
+
+    <h2>Common Bash-to-PowerShell mappings</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Bash concern</th><th>PowerShell approach</th><th>What to verify</th></tr></thead>
+        <tbody>
+          <tr><td><code>set -euo pipefail</code></td><td><code>Set-StrictMode</code>, <code>$ErrorActionPreference = 'Stop'</code>, explicit native exit checks</td><td>PowerShell does not treat every native nonzero exit as a terminating error.</td></tr>
+          <tr><td><code>$1</code>, <code>$2</code>, defaults</td><td>A typed <code>param(...)</code> block with validation</td><td>Required versus optional values, empty strings, arrays, and pipeline input.</td></tr>
+          <tr><td><code>export NAME=value</code></td><td><code>$env:NAME = 'value'</code></td><td>Process scope and whether child processes or later sessions need the value.</td></tr>
+          <tr><td><code>$(command)</code></td><td><code>$(command)</code> or direct assignment</td><td>Whether the result is one string, a string array, or rich objects.</td></tr>
+          <tr><td><code>source file.sh</code></td><td>Dot-source with <code>. ./file.ps1</code></td><td>Which functions and variables intentionally persist in the caller's scope.</td></tr>
+          <tr><td><code>find ... | grep ...</code></td><td><code>Get-ChildItem</code>, <code>Where-Object</code>, <code>Select-String</code></td><td>Recursion, links, hidden files, binary content, case sensitivity, and duplicate paths.</td></tr>
+          <tr><td><code>trap ... EXIT</code></td><td><code>try</code>/<code>finally</code>; sometimes <code>Register-EngineEvent</code></td><td>Cleanup after ordinary errors, cancellation, process termination, and host shutdown.</td></tr>
+          <tr><td><code>chmod</code>, <code>chown</code></td><td>Windows ACL cmdlets or .NET security APIs</td><td>There is no universal one-to-one mapping from Unix mode bits and ownership.</td></tr>
+          <tr><td><code>/tmp</code>, <code>/etc</code>, <code>~</code></td><td><code>[IO.Path]::GetTempPath()</code>, known folders, <code>$HOME</code>, configuration</td><td>Service accounts, scheduled tasks, cleanup, and path portability.</td></tr>
+          <tr><td><code>curl</code>, <code>wget</code></td><td><code>Invoke-RestMethod</code>, <code>Invoke-WebRequest</code>, or the native executable</td><td>Redirects, TLS, proxy use, authentication, binary output, and error status handling.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Pipelines are the largest semantic trap</h2>
+    <p>Bash pipelines normally pass bytes or lines. PowerShell pipelines pass .NET objects between cmdlets, but still pass text when a native executable is involved. A chain that looks nearly identical can therefore sort, filter, quote, and serialize differently.</p>
+    <p>Choose one boundary deliberately. Either keep a native text pipeline intact and document its dependencies, or convert the whole section to objects. Avoid repeatedly crossing between text and objects. At every native command, inspect <code>$LASTEXITCODE</code> when failure matters; <code>$?</code> alone is often too vague for automation.</p>
+
+    <h2>Paths and quoting need tests, not confidence</h2>
+    <p>Use <code>-LiteralPath</code> for user-supplied file paths, <code>Join-Path</code> to construct paths, and argument arrays instead of building one command string. Test spaces, brackets, apostrophes, Unicode, long paths, missing parents, and a working directory different from the script directory. Use <code>$PSScriptRoot</code> when an asset is relative to the script itself.</p>
+    <p>Do not translate <code>eval</code> into <code>Invoke-Expression</code>. Model the intended operation and pass validated arguments directly. This is both safer and easier to test.</p>
+
+    <h2>PowerShell 7 or Windows PowerShell 5.1?</h2>
+    <p>Prefer PowerShell 7 for new work: it has current language behavior, active support, better cross-platform consistency, and modern .NET APIs. Use Windows PowerShell 5.1 only when a required Windows-only module has not moved forward. State the target version in the script header and test on that exact version. A script that works in 7 may fail in 5.1 because parameters, encodings, or APIs differ.</p>
+
+    <h2>A repeatable conversion workflow</h2>
+    <ol>
+      <li>Freeze the behavior contract and representative fixtures.</li>
+      <li>Run the <a href="/crossshell/crossshell-audit.py">CrossShell preflight</a> to inventory conversion hotspots.</li>
+      <li>Separate platform-neutral intent from Unix-specific implementation.</li>
+      <li>Port parameters, path handling, and pure logic first.</li>
+      <li>Replace or isolate each external command one at a time.</li>
+      <li>Add explicit error handling and cleanup.</li>
+      <li>Run both versions against the same safe fixtures and compare outputs, file trees, exit codes, and repeat-run behavior.</li>
+      <li>Document every intentional difference and retained dependency.</li>
+    </ol>
+
+    <h2>When not to translate</h2>
+    <p>A script built around <code>/proc</code>, Linux namespaces, Unix permissions, package managers, systemd, or a dense chain of GNU tools may need a Windows-native redesign. Sometimes the honest answer is to run the original under a supported Linux environment instead of maintaining a fragile imitation. The preflight calls these dependencies out so that decision happens before the port grows expensive.</p>
+
+    <section class="card">
+      <p class="price">Need one reviewed port?</p>
+      <p>The CrossShell starter covers one Bash script up to 150 nonblank lines, with conversion notes, a verification checklist, and one revision.</p>
+      <a class="button" href="/crossshell/">See the $29 fixed scope</a>
+      <a class="button secondary" href="/crossshell/crossshell-audit.py" download>Download the free preflight</a>
+    </section>
+  </main>
+  <footer>neurogsynth · CrossShell conversion guide</footer>
+</body>
+</html>
+

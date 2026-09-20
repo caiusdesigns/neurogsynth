@@ -18,7 +18,8 @@ python3 crossshell-audit.py deploy.sh -o preflight.md
 A fixed-scope reviewed conversion service is also available from the CrossShell
 page. Public scope questions can use the
 [CrossShell issue form](https://github.com/caiusdesigns/neurogsynth/issues/new?template=crossshell-order.yml).
+The free scanner is versioned as
+[CrossShell v1.0.0](https://github.com/caiusdesigns/neurogsynth/releases/tag/crossshell-v1.0.0).
 
 Do not submit secrets, credentials, personal data, private code, or internal
 infrastructure details through a public issue.
-

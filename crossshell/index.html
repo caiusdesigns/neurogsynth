@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CrossShell — Bash-to-PowerShell conversion</title>
+  <meta name="description" content="A careful Bash-to-PowerShell 7 conversion with behavior notes, a verification checklist, and one revision.">
+  <link rel="canonical" href="https://www.neurogsynth.com/crossshell/">
+  <link rel="stylesheet" href="/crossshell/style.css">
+</head>
+<body>
+  <header><a class="brand" href="/">neurogsynth / CrossShell</a></header>
+  <main>
+    <p class="eyebrow">Small script conversion, fixed scope</p>
+    <h1>Bring one Bash script to Windows without pretending syntax is behavior.</h1>
+    <p class="lead">Get a human-reviewed PowerShell 7 port, conversion notes, and a verification checklist. Designed for the awkward little ops script your Windows workflow still cannot run.</p>
+
+    <section class="card">
+      <p class="price">$29</p>
+      <p>One Bash script, up to 150 nonblank lines. One revision included. Target delivery: two business days after complete, safe intake.</p>
+      <!-- CHECKOUT_CTA -->
+      <a class="button disabled" aria-disabled="true">Checkout opening shortly</a>
+      <!-- /CHECKOUT_CTA -->
+      <a class="button secondary" href="/crossshell/crossshell-audit.py" download>Download free preflight</a>
+      <p class="fine">No subscription. Payment will use PayPal-hosted checkout. Revenue is treated as earned only after the payment is settled and available.</p>
+    </section>
+
+    <h2>What you receive</h2>
+    <ul>
+      <li>A readable <code>.ps1</code> port for PowerShell 7 on supported Windows releases.</li>
+      <li>Notes for every material behavior change, platform difference, and retained dependency.</li>
+      <li>A verification checklist covering happy paths, failures, spaces, Unicode, and repeat runs where relevant.</li>
+      <li>One revision when the delivered script misses behavior agreed at intake.</li>
+    </ul>
+
+    <h2>Why a reviewed port?</h2>
+    <div class="sample">
+      <pre><code>find "$root" -type f -print0 |
+  xargs -0 grep -l "$pattern"</code></pre>
+      <pre><code>Get-ChildItem -LiteralPath $Root -File -Recurse |
+  Select-String -SimpleMatch $Pattern |
+  Select-Object -ExpandProperty Path -Unique</code></pre>
+    </div>
+    <p class="small">Pipelines, quoting, exit codes, permissions, paths, and third-party commands behave differently. The job is to preserve the intended outcome—not merely swap tokens.</p>
+
+    <h2>Free conversion preflight</h2>
+    <p>Run the offline scanner first. It flags process substitution, traps, Unix utilities, privilege changes, advanced parameter expansion, platform paths, and other conversion hotspots. It uploads nothing.</p>
+    <pre class="card"><code>python3 crossshell-audit.py deploy.sh -o preflight.md</code></pre>
+
+    <h2>Safe intake</h2>
+    <div class="guard">
+      <p>Submit only code you own or have permission to share. Use a public gist or repository URL and remove credentials, tokens, personal data, internal hostnames, and private business information.</p>
+      <p>Requests involving malware, credential theft, evasion, persistence, destructive behavior, or systems you do not own or administer are refused and refunded only through the original payment transaction.</p>
+    </div>
+
+    <h2>Scope limits</h2>
+    <p>The starter price excludes deployment, access to your systems, scripts over 150 nonblank lines, multi-file projects, and guarantees for undocumented third-party executables. If the request does not fit, no work begins until a separate scope is accepted.</p>
+  </main>
+  <footer>neurogsynth · Small tools for working shops, studios and crews.</footer>
+</body>
+</html>

@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        This issue is public. Do not include credentials, tokens, private keys, personal data, private code, internal hostnames, or payment identifiers. No paid work begins until checkout is available and payment is settled.
+        This issue is public. Do not include credentials, tokens, private keys, personal data, private code, internal hostnames, or payment identifiers. No paid work begins until a qualifying purchase-tagged payment is complete and available.
   - type: input
     id: script_url
     attributes:
@@ -43,4 +43,3 @@ body:
           required: true
         - label: The request is not for malware, credential theft, evasion, persistence, destructive behavior, or unauthorized access.
           required: true
-
